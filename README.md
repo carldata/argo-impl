@@ -12,7 +12,7 @@ We are happy to receive bug reports, fixes, documentation enhancements,
 and other improvements.
 
 Please report bugs via the
-[github issue tracker](http://github.com/carldata/flow-script/issues).
+[github issue tracker](http://github.com/carldata/argo-impl/issues).
 
 
 
