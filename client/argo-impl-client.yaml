@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: argo-impl-client
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: argo-impl-client
+    spec:
+      containers:
+      - name: argo-impl-client-container
+        image: flowworks-carlsolutions.azurecr.io/flowworks/argo-impl-client
+        ports:
+        - containerPort: 80        
+      dnsPolicy: ClusterFirst
+      hostNetwork: true
+      imagePullSecrets:
+      - name: regsecret
