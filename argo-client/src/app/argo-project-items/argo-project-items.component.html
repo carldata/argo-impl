@@ -1,0 +1,8 @@
+<ul class="list-group">
+  <argo-project-item 
+    *ngFor="let project of projects" 
+    [project]="project" 
+    (onEditClicked)="onProjectEditClicked($event)"
+    (onDeleteClicked)="onProjectDeleteClicked($event)">
+  </argo-project-item>
+</ul>
