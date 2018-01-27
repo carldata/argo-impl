@@ -5,6 +5,10 @@ import { AppComponent } from './app.component';
 import { ArgoProjectItemComponent } from './argo-project-item/argo-project-item.component';
 import { ArgoProjectItemsComponent } from './argo-project-items/argo-project-items.component';
 import { ArgoProjectsService } from './services/argo-projects.service';
+import { IHttpEndpoint, HTTP_ENDPOINT } from './services/http-endpoint';
+import { HttpEndpointMockService } from './services/http-endpoint-mock.service';
+import { environment } from '../environments/environment.prod';
+import { HttpEndpointService } from './services/http-endpoint.service';
 
 
 @NgModule({
@@ -17,7 +21,10 @@ import { ArgoProjectsService } from './services/argo-projects.service';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [ArgoProjectsService],
+  providers: [ArgoProjectsService, {
+    provide: HTTP_ENDPOINT,
+    useClass: environment.mockHttp ? HttpEndpointMockService : HttpEndpointService
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

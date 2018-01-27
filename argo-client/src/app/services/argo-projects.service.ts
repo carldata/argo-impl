@@ -1,30 +1,24 @@
 import 'rxjs/Rx';
-import * as _ from 'lodash';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IListItem } from '../model/list-item';
 import { IArgoProject } from '../model/argo-project';
 import { tap } from 'rxjs/operators';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-};
+import { IHttpEndpoint, HTTP_ENDPOINT } from './http-endpoint';
 
 @Injectable()
 export class ArgoProjectsService {
-  private hydraHttpApiServer = "http://localhost:8080";
-  private appName =  "argo-tests";
+  private httpEndpoint: IHttpEndpoint;
 
-  constructor(private http: HttpClient) { }
-
+  constructor(@Inject(HTTP_ENDPOINT) httpEndpoint: IHttpEndpoint) { 
+    this.httpEndpoint = httpEndpoint;
+  }
+  
   getProjects(): Observable<IArgoProject[]> {
-    return this.http
-      .get<IListItem[]>(`${this.hydraHttpApiServer}/items?app=${this.appName}`)
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => _.map(list, el => _.extend({}, el.data)));
+    return this.httpEndpoint.getProjects();
   }
 
   delete(id: string): Observable<any> {
-    return this.http.delete(`${this.hydraHttpApiServer}/items?app=${this.appName}&id=${id}`);
+    return this.httpEndpoint.delete(id);
   }
 }

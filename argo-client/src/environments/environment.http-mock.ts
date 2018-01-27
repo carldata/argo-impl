@@ -7,5 +7,5 @@ import { IEnvironmentContract } from "./contract";
 
 export const environment: IEnvironmentContract = {
   production: false,
-  mockHttp: false
+  mockHttp: true
 };

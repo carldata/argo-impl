@@ -1,3 +1,6 @@
-export const environment = {
-  production: true
+import { IEnvironmentContract } from "./contract";
+
+export const environment: IEnvironmentContract = {
+  production: true,
+  mockHttp: false
 };
