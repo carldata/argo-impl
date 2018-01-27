@@ -9,19 +9,38 @@ import { IHttpEndpoint } from './http-endpoint';
 @Injectable()
 export class HttpEndpointMockService implements IHttpEndpoint {
   private projectsLoaded: boolean;
+  private projects: IArgoProject[];
   
   constructor(private http: HttpClient) { }
 
   getProjects(): Observable<IArgoProject[]> {
-    if (_.isUndefined(this.projectsLoaded))
-      this.projectsLoaded = true;
-    return this.http
-      .get<IListItem[]>("assets/json/mock-projects.json")
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => _.map(list, el => _.extend({}, el.data)));
+    return _.isUndefined(this.projects) ? 
+      this.http
+        .get<IListItem[]>("assets/json/mock-projects.json")
+        .map<IListItem[], IArgoProject[]>((list: IListItem[]) => {
+          this.projects = _.map(list, el => _.extend({}, el.data));
+          return this.projects;
+        }) :
+      this.http
+        .get<IListItem[]>("assets/json/mock-empty-array.json")
+        .map<IListItem[], IArgoProject[]>((list: IListItem[]) => this.projects)
   }
 
-  delete(id: string): Observable<any> {
+  add(project: IArgoProject): Observable<IArgoProject[]> {
     return this.http
-      .get<IListItem[]>("assets/json/mock-projects.json")
+      .get<IListItem[]>("assets/json/mock-empty-array.json")
+      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => {
+        this.projects = _.concat(this.projects, [project]);
+        return this.projects;
+      });
+  }
+
+  delete(id: string): Observable<IArgoProject[]> {
+    return this.http
+      .get<IListItem[]>("assets/json/mock-empty-array.json")
+      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => {
+        this.projects = _.filter(this.projects, el => el.id != id);
+        return this.projects;
+      });
   }
 }

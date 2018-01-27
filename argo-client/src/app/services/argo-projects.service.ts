@@ -18,7 +18,11 @@ export class ArgoProjectsService {
     return this.httpEndpoint.getProjects();
   }
 
-  delete(id: string): Observable<any> {
+  add(project: IArgoProject): Observable<IArgoProject[]> {
+    return this.httpEndpoint.add(project);
+  }
+
+  delete(id: string): Observable<IArgoProject[]> {
     return this.httpEndpoint.delete(id);
   }
 }

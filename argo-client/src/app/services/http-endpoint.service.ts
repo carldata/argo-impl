@@ -19,7 +19,15 @@ export class HttpEndpointService implements IHttpEndpoint {
       .map<IListItem[], IArgoProject[]>((list: IListItem[]) => _.map(list, el => _.extend({}, el.data)));
   }
 
-  delete(id: string): Observable<any> {
-    return this.http.delete(`${this.hydraHttpApiServer}/items?app=${this.appName}&id=${id}`);
+  add(project: IArgoProject): Observable<IArgoProject[]> {
+    return this.http
+      .get<IListItem[]>(`${this.hydraHttpApiServer}/items?app=${this.appName}`)
+      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => []); //TODO: implement !
+  }
+
+  delete(id: string): Observable<IArgoProject[]> {
+    return this.http
+      .delete<IListItem[]>(`${this.hydraHttpApiServer}/items?app=${this.appName}&id=${id}`)
+      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => []); //TODO: implement !
   }
 }
