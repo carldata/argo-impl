@@ -17,6 +17,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
   }
 
   delete(id: string): Observable<any> {
-    return null;
+    return this.http
+      .get<IListItem[]>("assets/json/mock-projects.json")
   }
 }
