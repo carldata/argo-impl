@@ -7,9 +7,8 @@ import { ArgoProjectItemsComponent } from './argo-project-items/argo-project-ite
 import { ArgoProjectsService } from './services/argo-projects.service';
 import { IHttpEndpoint, HTTP_ENDPOINT } from './services/http-endpoint';
 import { HttpEndpointMockService } from './services/http-endpoint-mock.service';
-import { environment } from '../environments/environment.prod';
+import { environment } from  '../environments/environment';
 import { HttpEndpointService } from './services/http-endpoint.service';
-
 
 @NgModule({
   declarations: [
