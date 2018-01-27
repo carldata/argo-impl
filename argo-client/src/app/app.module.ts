@@ -9,21 +9,28 @@ import { IHttpEndpoint, HTTP_ENDPOINT } from './services/http-endpoint';
 import { HttpEndpointMockService } from './services/http-endpoint-mock.service';
 import { environment } from  '../environments/environment';
 import { HttpEndpointService } from './services/http-endpoint.service';
+import { AppRoutingModule } from './app-routing.module';
+import { ArgoProjectDetailsComponent } from './argo-project-details/argo-project-details.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ArgoProjectItemComponent,
-    ArgoProjectItemsComponent
+    ArgoProjectItemsComponent,
+    ArgoProjectDetailsComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    AppRoutingModule
   ],
-  providers: [ArgoProjectsService, {
-    provide: HTTP_ENDPOINT,
-    useClass: environment.mockHttp ? HttpEndpointMockService : HttpEndpointService
-  }],
-  bootstrap: [AppComponent]
+  providers: [
+    ArgoProjectsService, 
+    {
+      provide: HTTP_ENDPOINT,
+      useClass: environment.mockHttp ? HttpEndpointMockService : HttpEndpointService
+    }
+  ],
+  bootstrap: [ AppComponent ]
 })
 export class AppModule { }

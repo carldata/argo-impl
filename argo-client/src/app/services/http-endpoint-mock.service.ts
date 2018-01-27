@@ -8,9 +8,13 @@ import { IHttpEndpoint } from './http-endpoint';
 
 @Injectable()
 export class HttpEndpointMockService implements IHttpEndpoint {
+  private projectsLoaded: boolean;
+  
   constructor(private http: HttpClient) { }
 
   getProjects(): Observable<IArgoProject[]> {
+    if (_.isUndefined(this.projectsLoaded))
+      this.projectsLoaded = true;
     return this.http
       .get<IListItem[]>("assets/json/mock-projects.json")
       .map<IListItem[], IArgoProject[]>((list: IListItem[]) => _.map(list, el => _.extend({}, el.data)));
