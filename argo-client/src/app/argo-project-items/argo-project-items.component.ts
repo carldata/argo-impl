@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 } from 'uuid';
 import { IArgoProject } from '../model/argo-project';
-import { ArgoProjectsService } from '../services/argo-projects.service';
+import { HydraHttpBackendService } from '../services/hydra-http-backend.service';
 import { routeUrls } from '../route-urls';
 import { EnumArgoProjectDetailsComponentModes } from '../argo-project-details/argo-project-details.component';
 
@@ -15,7 +15,7 @@ import { EnumArgoProjectDetailsComponentModes } from '../argo-project-details/ar
 export class ArgoProjectItemsComponent implements OnInit {
   public projects: IArgoProject[];
 
-  constructor(private router: Router, private argoProjectsService: ArgoProjectsService) { }
+  constructor(private router: Router, private backendService: HydraHttpBackendService) { }
 
   onProjectAddClicked() {
     this.router.navigate([`${routeUrls.projectDetail}/${EnumArgoProjectDetailsComponentModes.Add}/${v4()}`]);
@@ -26,13 +26,13 @@ export class ArgoProjectItemsComponent implements OnInit {
   }
 
   onProjectDeleteClicked(id) {
-    this.argoProjectsService.delete(id).subscribe((projects) => {
+    this.backendService.delete(id).subscribe((projects) => {
       this.projects = projects;
     });
   }
 
   ngOnInit() {
-    this.argoProjectsService.getProjects().subscribe(projects => {
+    this.backendService.getProjects().subscribe(projects => {
       this.projects = projects;
     });
   }

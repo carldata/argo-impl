@@ -1,7 +1,9 @@
 import * as _ from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { IArgoProject } from '../model/argo-project';
-import { ArgoProjectsService } from '../services/argo-projects.service';
+import { HydraHttpBackendService } from '../services/hydra-http-backend.service';
+import { Router } from '@angular/router';
+import { routeUrls } from '../route-urls';
 
 @Component({
   selector: 'argo-project-item',
@@ -10,6 +12,7 @@ import { ArgoProjectsService } from '../services/argo-projects.service';
       <div class="d-flex w-100 justify-content-between">
         <label>{{project.name}}</label>
         <div class="btn-group btn-group-toggle">
+          <button type class="btn btn-sm btn-success" (click)="selectClicked()">Select</button>
           <button type class="btn btn-sm btn-primary" (click)="editClicked()">Edit</button>
           <button type class="btn btn-sm btn-danger" (click)="deleteClicked()">Delete</button>
         </div>
@@ -23,9 +26,13 @@ export class ArgoProjectItemComponent implements OnInit {
   @Output() onEditClicked = new EventEmitter<string>();
   @Output() onDeleteClicked = new EventEmitter<string>();
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  selectClicked() {
+    this.router.navigate([`${routeUrls.projectTimeSeries}/${this.project.id}`]);
   }
 
   editClicked() {

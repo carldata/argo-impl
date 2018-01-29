@@ -1,10 +1,14 @@
 import * as _ from 'lodash';
+import * as Papa from 'papaparse';
+import { ParseResult } from 'papaparse';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs/Rx'
 import { IArgoProject } from '../model/argo-project';
 import { IListItem } from '../model/list-item';
 import { IHttpEndpoint } from './http-endpoint';
+import { IArgoTimeSeries } from '../model/argo-time-series';
+import { IDateTimeValue } from '../model/date-time-point';
 
 @Injectable()
 export class HttpEndpointMockService implements IHttpEndpoint {
@@ -56,5 +60,9 @@ export class HttpEndpointMockService implements IHttpEndpoint {
         this.projects = _.filter(this.projects, el => el.id != id);
         return this.projects;
       });
+  }
+
+  formatFetchTimeSeriesUrl(channelId: string, dateFrom: string, dateTo: string): string {
+    return "assets/json/mock-time-series.csv";
   }
 }

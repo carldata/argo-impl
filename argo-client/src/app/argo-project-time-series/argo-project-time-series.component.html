@@ -1,0 +1,19 @@
+
+<form>
+  <h3>Argo Project Time Series</h3>
+  <div class="form-inline">
+    <label>Name: {{project.name}}, Input channel id: {{project.inputChannelId}}, Output channel id: {{project.outputChannelId}}</label>
+  </div>
+  <div class="form-inline">
+    <label for="txtInputChannelId">Selected date:</label>
+    <input type="date" class="form-control" name="selectedDate" [(ngModel)]="selectedDate" placeholder="YYYY-MM-DD" />
+    <button type="button" class="btn btn-success" (click)="onLoadTimeSeries()">Load Time Series</button>
+    <button type="button" class="btn btn-primary" (click)="onGoBack()">Back to List of Projects</button>
+  </div>
+  <div class="form-inline">
+    <nvd3 [options]="chartOptions" [data]="dataInputChannelChart"></nvd3>
+  </div>
+  <div class="form-inline">
+    <nvd3 [options]="chartOptions" [data]="dataOutputChannelChart"></nvd3>
+  </div>
+</form>
