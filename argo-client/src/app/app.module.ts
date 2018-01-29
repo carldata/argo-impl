@@ -6,6 +6,7 @@ import { ArgoProjectItemComponent } from './argo-project-item/argo-project-item.
 import { ArgoProjectItemsComponent } from './argo-project-items/argo-project-items.component';
 import { ArgoProjectsService } from './services/argo-projects.service';
 import { IHttpEndpoint, HTTP_ENDPOINT } from './services/http-endpoint';
+import { FormsModule } from '@angular/forms';
 import { HttpEndpointMockService } from './services/http-endpoint-mock.service';
 import { environment } from  '../environments/environment';
 import { HttpEndpointService } from './services/http-endpoint.service';
@@ -21,6 +22,7 @@ import { ArgoProjectDetailsComponent } from './argo-project-details/argo-project
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     HttpClientModule,
     AppRoutingModule
   ],

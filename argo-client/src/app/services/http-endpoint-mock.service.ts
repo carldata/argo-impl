@@ -35,6 +35,20 @@ export class HttpEndpointMockService implements IHttpEndpoint {
       });
   }
 
+  update(project: IArgoProject): Observable<IArgoProject[]> {
+    return this.http
+      .get<IListItem[]>("assets/json/mock-empty-array.json")
+      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => {
+        let projectFound = _.find(this.projects, el => el.id == project.id);
+        if (_.isObject(projectFound)) {
+          projectFound.name = project.name;
+          projectFound.inputChannelId = project.inputChannelId;
+          projectFound.outputChannelId = project.outputChannelId;
+        }
+        return this.projects;
+      });
+  }
+
   delete(id: string): Observable<IArgoProject[]> {
     return this.http
       .get<IListItem[]>("assets/json/mock-empty-array.json")

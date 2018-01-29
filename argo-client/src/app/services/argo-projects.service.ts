@@ -22,6 +22,10 @@ export class ArgoProjectsService {
     return this.httpEndpoint.add(project);
   }
 
+  update(project: IArgoProject): Observable<IArgoProject[]> {
+    return this.httpEndpoint.update(project);
+  }
+
   delete(id: string): Observable<IArgoProject[]> {
     return this.httpEndpoint.delete(id);
   }
