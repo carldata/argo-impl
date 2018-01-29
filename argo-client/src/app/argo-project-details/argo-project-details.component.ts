@@ -6,28 +6,47 @@ import { ActivatedRoute } from '@angular/router';
 import { ArgoProjectsService } from '../services/argo-projects.service';
 import { IArgoProject } from '../model/argo-project';
 
+export const enum EnumArgoProjectDetailsComponentModes {
+  Add,
+  Edit
+}
+
 @Component({
   selector: 'app-argo-project-details',
   templateUrl: './argo-project-details.component.html',
   styleUrls: ['./argo-project-details.component.css']
 })
 export class ArgoProjectDetailsComponent implements OnInit {
+  private mode: EnumArgoProjectDetailsComponentModes;
   public project: IArgoProject = { id: "", name: "", inputChannelId: "", outputChannelId: "" };
-
+  
   constructor(private router: Router, private route: ActivatedRoute, private projectsService: ArgoProjectsService) {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.projectsService.getProjects().subscribe((projects) => {
-      this.project =  _.find(projects, el => el.id == id);
-    });
+    this.mode = +this.route.snapshot.paramMap.get('mode') 
+    this.project.id = this.route.snapshot.paramMap.get('id');
+    if (this.mode == EnumArgoProjectDetailsComponentModes.Edit) {
+      this.projectsService.getProjects().subscribe((projects) => {
+        this.project =  _.find(projects, el => el.id == this.project.id);
+      });
+    }
   }
 
   onApprove() {
-    this.projectsService.update(this.project).subscribe(() => {
-      this.router.navigate([`${routeUrls.projects}`]);
-    });
+    switch (this.mode) {
+      case EnumArgoProjectDetailsComponentModes.Add:
+        this.projectsService.add(this.project).subscribe(() => {
+          this.router.navigate([`${routeUrls.projects}`]);
+        });
+        break;
+      case EnumArgoProjectDetailsComponentModes.Edit:
+        this.projectsService.update(this.project).subscribe(() => {
+          this.router.navigate([`${routeUrls.projects}`]);
+        });
+        break;
+    }
+    
   }
 
   onCancel() {

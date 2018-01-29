@@ -7,7 +7,7 @@ import { routeUrls } from './route-urls';
 const routes: Routes = [
   { path: '', redirectTo: `/${routeUrls.projects}`, pathMatch: 'full' },
   { path: `${routeUrls.projects}`, component: ArgoProjectItemsComponent },
-  { path: `${routeUrls.projectDetail}/:id`, component: ArgoProjectDetailsComponent }
+  { path: `${routeUrls.projectDetail}/:mode/:id`, component: ArgoProjectDetailsComponent }
 ];
 
 @NgModule({

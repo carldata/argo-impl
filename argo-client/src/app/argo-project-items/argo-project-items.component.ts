@@ -5,7 +5,7 @@ import { v4 } from 'uuid';
 import { IArgoProject } from '../model/argo-project';
 import { ArgoProjectsService } from '../services/argo-projects.service';
 import { routeUrls } from '../route-urls';
-
+import { EnumArgoProjectDetailsComponentModes } from '../argo-project-details/argo-project-details.component';
 
 @Component({
   selector: 'argo-project-items',
@@ -18,18 +18,11 @@ export class ArgoProjectItemsComponent implements OnInit {
   constructor(private router: Router, private argoProjectsService: ArgoProjectsService) { }
 
   onProjectAddClicked() {
-    this.argoProjectsService.add({
-      id: v4(),
-      name: `random-${_.random(1, 124)}`,
-      inputChannelId: `input-channel-${_.random(10, 100)}`,
-      outputChannelId: `input-channel-${_.random(10, 100)}`
-    }).subscribe((projects) => {
-      this.projects = projects;
-    });
+    this.router.navigate([`${routeUrls.projectDetail}/${EnumArgoProjectDetailsComponentModes.Add}/${v4()}`]);
   }
 
   onProjectEditClicked(id: string) {
-    this.router.navigate([`${routeUrls.projectDetail}/${id}`]);
+    this.router.navigate([`${routeUrls.projectDetail}/${EnumArgoProjectDetailsComponentModes.Edit}/${id}`]);
   }
 
   onProjectDeleteClicked(id) {
