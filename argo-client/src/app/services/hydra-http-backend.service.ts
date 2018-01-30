@@ -44,7 +44,7 @@ export class HydraHttpBackendService {
       download: true,
       complete: (results: ParseResult) => {
         resolve(_.map(results.data, el => <IDateTimeValue> {
-          time: new Date(el.time),
+          unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.value)
         }));
       }

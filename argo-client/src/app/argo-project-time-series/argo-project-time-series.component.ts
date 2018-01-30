@@ -26,7 +26,7 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
         left: 55
       },
       useInteractiveGuideline: false,
-      x: function(d: IDateTimeValue) { return d.time; },
+      x: function(d: IDateTimeValue) { return d.unixTimestamp; },
       y: function(d: IDateTimeValue) { return d.value; },
       xAxis: {
         axisLabel: "Time",

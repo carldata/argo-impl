@@ -1,5 +1,7 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
+import axios from 'axios';
+import { AxiosPromise, AxiosResponse } from 'axios';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
@@ -21,29 +23,33 @@ export class HttpEndpointService implements IHttpEndpoint {
 
   getProjects(): Observable<IArgoProject[]> {
     return this.http
-      .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddres}/items?app=${this.appName}`)
+      .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddress}/items?app=${this.appName}`)
       .map<IListItem[], IArgoProject[]>((list: IListItem[]) => _.map(list, el => _.extend({}, el.data)));
   }
 
   add(project: IArgoProject): Observable<IArgoProject[]> {
-    return this.http
-      .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddres}/items?app=${this.appName}&id=${project.id}`)
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => []); //TODO: implement !
+    return Observable.concat(
+      this.http
+        .post(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${project.id}`, project, { responseType: 'text' })
+        .map<string, IArgoProject[]>((id: string) => []),
+      this.getProjects());
   }
 
   update(project: IArgoProject): Observable<IArgoProject[]> {
     return this.http
-      .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddres}/items?app=${this.appName}&id=${project.id}`)
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => []); //TODO: implement !
+      .post(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${project.id}`, project, { responseType: 'text' })
+      .map<string, IArgoProject[]>((id: string) => []);
   }
 
   delete(id: string): Observable<IArgoProject[]> {
-    return this.http
-      .delete<IListItem[]>(`${environment.hydraHttpApiEndpointAddres}/items?app=${this.appName}&id=${id}`)
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => []); //TODO: implement !
+    return  Observable.concat(
+      this.http
+        .delete(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${id}`, { responseType: 'text' })
+        .map<string, IArgoProject[]>((id: string) => []),
+      this.getProjects())
   }
 
   formatFetchTimeSeriesUrl(channelId: string, dateFrom: string, dateTo: string): string {
-    return `${environment.hydraHttpApiEndpointAddres}/api/timeseries?id=${channelId}&startDate=${dateFrom}&endDate=${dateTo}`;
+    return `${environment.hydraHttpApiEndpointAddress}/api/timeseries?id=${channelId}&startDate=${dateFrom}&endDate=${dateTo}`;
   }
 }
