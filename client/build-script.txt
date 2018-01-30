@@ -1,6 +1,0 @@
-docker build -t flowworks-carlsolutions.azurecr.io/flowworks/argo-impl-client .
-docker ps
-docker run -d -p 8080:80 [imageId]
-docker push flowworks-carlsolutions.azurecr.io/flowworks/argo-impl-client
-kubectl create -f argo-impl-client.yaml
-kubectl expose deployment argo-impl-client --type=LoadBalancer --name=argo-impl-client
