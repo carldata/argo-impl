@@ -30,7 +30,8 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
       y: function(d: IDateTimeValue) { return d.value; },
       xAxis: {
         axisLabel: "Time",
-        tickFormat: (tick) => { return dateFns.format(tick, "YYYY-MM-DD HH:mm"); }
+        staggerLabels: true,
+        tickFormat: (tick) => { return dateFns.format(tick, "MMM-DD HH:mm"); }
       },
       yAxis: {
         axisLabel: "Value",
