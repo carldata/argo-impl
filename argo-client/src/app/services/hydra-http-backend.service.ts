@@ -12,6 +12,7 @@ import { ParseResult } from 'papaparse';
 import { IDateTimeValue } from '../model/date-time-point';
 import { LoaderScreenService } from '../loader-screen/loader-screen.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
 export class HydraHttpBackendService {
@@ -24,35 +25,50 @@ export class HydraHttpBackendService {
     this.loaderScreenService = loaderScreenService;
     this.notificationsService = notificationsService;
   }
-  
-  getProjects(): Observable<IArgoProject[]> {
+
+  private getErrorMessage(error): string {
+    if (error instanceof HttpErrorResponse) 
+      return error.message;
+    return error;
+  }
+
+  /**
+   * "Wraps" creating of an observable with: 
+   * 1) orchestrating of showing/hiding a "loading" screen
+   * 2) sending a notification message on successful or failed network operation 
+   */
+  private wrapObservable<T>(called: Observable<T>, successMessage?: string): Observable<T> {
     this.loaderScreenService.show();
-    return this.httpEndpoint.getProjects()
+    return called
+      .catch((error, observable) => {
+        this.loaderScreenService.hide();
+        this.notificationsService.notify("error", this.getErrorMessage(error));
+        return [];
+      })
       .do(() => { 
         this.loaderScreenService.hide();
-        this.notificationsService.notify("success", "Project loaded successfully");
+        if (_.isString(successMessage))
+          this.notificationsService.notify("success", successMessage);
       });
   }
-
-  add(project: IArgoProject): Observable<IArgoProject[]> {
-    this.loaderScreenService.show();
-    return this.httpEndpoint.add(project)
-      .do(() => this.loaderScreenService.hide());
+  
+  public getProjects(): Observable<IArgoProject[]> {
+    return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  update(project: IArgoProject): Observable<IArgoProject[]> {
-    this.loaderScreenService.show();
-    return this.httpEndpoint.update(project)
-      .do(() => this.loaderScreenService.hide());
+  public add(project: IArgoProject): Observable<IArgoProject[]> {
+    return this.wrapObservable(this.httpEndpoint.add(project), "Project added successfully");
   }
 
-  delete(id: string): Observable<IArgoProject[]> {
-    this.loaderScreenService.show();
-    return this.httpEndpoint.delete(id)
-     .do(() => this.loaderScreenService.hide());
+  public update(project: IArgoProject): Observable<IArgoProject[]> {
+    return this.wrapObservable(this.httpEndpoint.update(project), "Project updated successfully");
   }
 
-  getTimeSeries(project: IArgoProject, date: string): Observable<IArgoTimeSeries> {
+  public delete(id: string): Observable<IArgoProject[]> {
+    return this.wrapObservable(this.httpEndpoint.delete(id), "Project deleted successfully");
+  }
+
+  private getTimeSeriesImplementation(project: IArgoProject, date: string): Observable<IArgoTimeSeries> {
     let dateFrom = dateFns.format(new Date(date), "YYYY-MM-DD 00:00:00");
     let dateTo = dateFns.format(dateFns.addDays(new Date(date), 1), "YYYY-MM-DD 00:00:00");
     let papaParseConfig = (resolve) => _.extend({}, {
@@ -79,14 +95,10 @@ export class HydraHttpBackendService {
         inputChannelSeries: inputData,
         outputChannelSeries: outputData
       }
-    })).do(() => this.loaderScreenService.hide());
-    //TODO: integrate with message service
-    // let warningMessages = [];
-    // if (parsedInputChannel.data.length == 0)
-    //   warningMessages.push("Input channel contains no samples for date");
-    // if (parsedOutputChannel.data.length == 0)
-    //   warningMessages.push("Output channel contains no samples for date");
-    // if ((parsedInputChannel.data.length != 0) && (parsedOutputChannel.data.length != 0) && (parsedInputChannel.data.length != parsedOutputChannel.data.length))
-    //   warningMessages.push("Input and output channels have different number of samples for date");
+    }));
+  }
+
+  public getTimeSeries(project: IArgoProject, date: string): Observable<IArgoTimeSeries> {
+    return this.wrapObservable<IArgoTimeSeries>(this.getTimeSeriesImplementation(project, date));
   }
 }

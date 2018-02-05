@@ -22,7 +22,9 @@ export class HttpEndpointService implements IHttpEndpoint {
   getProjects(): Observable<IArgoProject[]> {
     return this.http
       .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddress}/items?app=${this.appName}`)
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => _.map(list, el => _.extend({}, el.data)));
+      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => {
+        return _.map(list, el => _.extend({}, el.data));
+      });
   }
 
   add(project: IArgoProject): Observable<IArgoProject[]> {
