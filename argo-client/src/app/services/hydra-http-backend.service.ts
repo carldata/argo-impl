@@ -10,29 +10,40 @@ import { IHttpEndpoint, HTTP_ENDPOINT } from './http-endpoint';
 import { IArgoTimeSeries } from '../model/argo-time-series';
 import { ParseResult } from 'papaparse';
 import { IDateTimeValue } from '../model/date-time-point';
+import { LoaderScreenService } from '../loader-screen/loader-screen.service';
 
 @Injectable()
 export class HydraHttpBackendService {
   private httpEndpoint: IHttpEndpoint;
+  private loaderScreenService: LoaderScreenService;
 
-  constructor(@Inject(HTTP_ENDPOINT) httpEndpoint: IHttpEndpoint) { 
+  constructor(@Inject(HTTP_ENDPOINT) httpEndpoint: IHttpEndpoint, loaderScreenService: LoaderScreenService) { 
     this.httpEndpoint = httpEndpoint;
+    this.loaderScreenService = loaderScreenService;
   }
   
   getProjects(): Observable<IArgoProject[]> {
-    return this.httpEndpoint.getProjects();
+    this.loaderScreenService.show();
+    return this.httpEndpoint.getProjects()
+      .do(() => this.loaderScreenService.hide());
   }
 
   add(project: IArgoProject): Observable<IArgoProject[]> {
-    return this.httpEndpoint.add(project);
+    this.loaderScreenService.show();
+    return this.httpEndpoint.add(project)
+      .do(() => this.loaderScreenService.hide());
   }
 
   update(project: IArgoProject): Observable<IArgoProject[]> {
-    return this.httpEndpoint.update(project);
+    this.loaderScreenService.show();
+    return this.httpEndpoint.update(project)
+      .do(() => this.loaderScreenService.hide());
   }
 
   delete(id: string): Observable<IArgoProject[]> {
-    return this.httpEndpoint.delete(id);
+    this.loaderScreenService.show();
+    return this.httpEndpoint.delete(id)
+     .do(() => this.loaderScreenService.hide());
   }
 
   getTimeSeries(project: IArgoProject, date: string): Observable<IArgoTimeSeries> {
@@ -55,13 +66,14 @@ export class HydraHttpBackendService {
     let parsedOutputChannelPromise = new Promise((resolve, reject) => 
       Papa.parse(this.httpEndpoint.formatFetchTimeSeriesUrl(project.outputChannelId, dateFrom, dateTo), 
                  papaParseConfig(resolve)));
+    this.loaderScreenService.show();
     return Observable.from(Promise.all([parsedInputChannelPromise, parsedOutputChannelPromise]).then((results) => {
       let [inputData, outputData] = results;
       return <IArgoTimeSeries> {
         inputChannelSeries: inputData,
         outputChannelSeries: outputData
       }
-    }));
+    })).do(() => this.loaderScreenService.hide());
     //TODO: integrate with message service
     // let warningMessages = [];
     // if (parsedInputChannel.data.length == 0)

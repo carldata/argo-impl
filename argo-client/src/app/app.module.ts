@@ -17,6 +17,8 @@ import { HttpEndpointService } from './services/http-endpoint.service';
 import { AppRoutingModule } from './app-routing.module';
 import { ArgoProjectDetailsComponent } from './argo-project-details/argo-project-details.component';
 import { ArgoProjectTimeSeriesComponent } from './argo-project-time-series/argo-project-time-series.component';
+import { LoaderScreenComponent } from './loader-screen/loader-screen.component';
+import { LoaderScreenService } from './loader-screen/loader-screen.service';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { ArgoProjectTimeSeriesComponent } from './argo-project-time-series/argo-
     ArgoProjectItemComponent,
     ArgoProjectItemsComponent,
     ArgoProjectDetailsComponent,
-    ArgoProjectTimeSeriesComponent
+    ArgoProjectTimeSeriesComponent,
+    LoaderScreenComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,8 @@ import { ArgoProjectTimeSeriesComponent } from './argo-project-time-series/argo-
     {
       provide: HTTP_ENDPOINT,
       useClass: environment.mockHttp ? HttpEndpointMockService : HttpEndpointService
-    }
+    },
+    LoaderScreenService
   ],
   bootstrap: [ AppComponent ]
 })
