@@ -11,21 +11,27 @@ import { IArgoTimeSeries } from '../model/argo-time-series';
 import { ParseResult } from 'papaparse';
 import { IDateTimeValue } from '../model/date-time-point';
 import { LoaderScreenService } from '../loader-screen/loader-screen.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Injectable()
 export class HydraHttpBackendService {
   private httpEndpoint: IHttpEndpoint;
   private loaderScreenService: LoaderScreenService;
+  private notificationsService: NotificationsService;
 
-  constructor(@Inject(HTTP_ENDPOINT) httpEndpoint: IHttpEndpoint, loaderScreenService: LoaderScreenService) { 
+  constructor(@Inject(HTTP_ENDPOINT) httpEndpoint: IHttpEndpoint, loaderScreenService: LoaderScreenService, notificationsService: NotificationsService) { 
     this.httpEndpoint = httpEndpoint;
     this.loaderScreenService = loaderScreenService;
+    this.notificationsService = notificationsService;
   }
   
   getProjects(): Observable<IArgoProject[]> {
     this.loaderScreenService.show();
     return this.httpEndpoint.getProjects()
-      .do(() => this.loaderScreenService.hide());
+      .do(() => { 
+        this.loaderScreenService.hide();
+        this.notificationsService.notify("success", "Project loaded successfully");
+      });
   }
 
   add(project: IArgoProject): Observable<IArgoProject[]> {
