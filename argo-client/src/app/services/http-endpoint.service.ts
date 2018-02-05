@@ -1,7 +1,5 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import axios from 'axios';
-import { AxiosPromise, AxiosResponse } from 'axios';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
