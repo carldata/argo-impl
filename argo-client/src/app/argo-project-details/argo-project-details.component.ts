@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { routeUrls } from '../route-urls';
 import { ActivatedRoute } from '@angular/router';
 import { HydraHttpBackendService } from '../services/hydra-http-backend.service';
-import { IArgoProject } from '../model/argo-project';
+import { IProject } from '../model/project';
 
 export const enum EnumArgoProjectDetailsComponentModes {
   Add,
@@ -18,7 +18,7 @@ export const enum EnumArgoProjectDetailsComponentModes {
 })
 export class ArgoProjectDetailsComponent implements OnInit {
   private mode: EnumArgoProjectDetailsComponentModes;
-  public project: IArgoProject = { id: "", name: "", inputChannelId: "", outputChannelId: "" };
+  public project: IProject = { id: "", name: "", inputChannelId: "", outputChannelId: "" };
   
   constructor(private router: Router, private route: ActivatedRoute, private backendService: HydraHttpBackendService) {
   }

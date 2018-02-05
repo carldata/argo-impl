@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProjectsScreen } from './index';
 
-import { ArgoProjectItemsComponent } from './argo-project-items.component';
-
-describe('ArgoProjectItemsComponent', () => {
-  let component: ArgoProjectItemsComponent;
-  let fixture: ComponentFixture<ArgoProjectItemsComponent>;
+describe('ProjectsScreen', () => {
+  let component: ProjectsScreen;
+  let fixture: ComponentFixture<ProjectsScreen>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ArgoProjectItemsComponent ]
+      declarations: [ ProjectsScreen ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ArgoProjectItemsComponent);
+    fixture = TestBed.createComponent(ProjectsScreen);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Component, OnInit } from '@angular/core';
-import { IArgoProject } from '../model/argo-project';
+import { IProject } from '../model/project';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HydraHttpBackendService } from '../services/hydra-http-backend.service';
 import { routeUrls } from '../route-urls';
@@ -40,7 +40,7 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
     }
   }
   public selectedDate: string = dateFns.format(new Date(), "YYYY-MM-DD");
-  public project: IArgoProject = { id: "", name: "", inputChannelId: "", outputChannelId: "" };
+  public project: IProject = { id: "", name: "", inputChannelId: "", outputChannelId: "" };
   
   public dataInputChannelChart = [];
   public dataOutputChannelChart = [];

@@ -1,12 +1,11 @@
 import * as _ from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { IArgoProject } from '../model/argo-project';
-import { HydraHttpBackendService } from '../services/hydra-http-backend.service';
 import { Router } from '@angular/router';
-import { routeUrls } from '../route-urls';
+import { IProject } from '../../../../model/project';
+import { routeUrls } from '../../../../route-urls';
 
 @Component({
-  selector: 'argo-project-item',
+  selector: 'project-item',
   template: `
     <li class="list-group-item list-group-item-action flex-column align-items-start">
       <div class="d-flex w-100 justify-content-between">
@@ -16,11 +15,10 @@ import { routeUrls } from '../route-urls';
         </div>
       </div>
     </li>
-  `,
-  styleUrls: ['./argo-project-item.component.css']
+  `
 })
-export class ArgoProjectItemComponent implements OnInit {
-  @Input() project: IArgoProject;
+export class ProjectItemComponent implements OnInit {
+  @Input() project: IProject;
 
   constructor(private router: Router) { }
 

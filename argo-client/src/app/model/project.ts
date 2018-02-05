@@ -1,4 +1,4 @@
-export interface IArgoProject {
+export interface IProject {
   id: string;
   name: string;
   inputChannelId: string;

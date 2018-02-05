@@ -8,8 +8,8 @@ import { NgModule } from '@angular/core';
 import { NvD3Module } from 'ng2-nvd3';
 import { ToasterService, ToasterModule } from 'angular2-toaster';
 import { AppComponent } from './app.component';
-import { ArgoProjectItemComponent } from './argo-project-item/argo-project-item.component';
-import { ArgoProjectItemsComponent } from './argo-project-items/argo-project-items.component';
+import { ProjectsScreen } from './screens/projects';
+import { ProjectItemComponent } from './screens/projects/components/project-item'
 import { HydraHttpBackendService } from './services/hydra-http-backend.service';
 import { IHttpEndpoint, HTTP_ENDPOINT } from './services/http-endpoint';
 import { FormsModule } from '@angular/forms';
@@ -27,8 +27,8 @@ import { NotificationsService } from './notifications/notifications.service';
 @NgModule({
   declarations: [
     AppComponent,
-    ArgoProjectItemComponent,
-    ArgoProjectItemsComponent,
+    ProjectItemComponent,
+    ProjectsScreen,
     ArgoProjectDetailsComponent,
     ArgoProjectTimeSeriesComponent,
     LoaderScreenComponent,

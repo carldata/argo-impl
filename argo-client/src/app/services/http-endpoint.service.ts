@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IHttpEndpoint } from './http-endpoint';
-import { IArgoProject } from '../model/argo-project';
+import { IProject } from '../model/project';
 import { IListItem } from '../model/list-item';
 import { environment } from '../../environments/environment';
 import { IArgoTimeSeries } from '../model/argo-time-series';
@@ -19,33 +19,33 @@ export class HttpEndpointService implements IHttpEndpoint {
 
   constructor(private http: HttpClient) { }
 
-  getProjects(): Observable<IArgoProject[]> {
+  getProjects(): Observable<IProject[]> {
     return this.http
       .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddress}/items?app=${this.appName}`)
-      .map<IListItem[], IArgoProject[]>((list: IListItem[]) => {
+      .map<IListItem[], IProject[]>((list: IListItem[]) => {
         return _.map(list, el => _.extend({}, el.data));
       });
   }
 
-  add(project: IArgoProject): Observable<IArgoProject[]> {
+  add(project: IProject): Observable<IProject[]> {
     return Observable.concat(
       this.http
         .post(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${project.id}`, project, { responseType: 'text' })
-        .map<string, IArgoProject[]>((id: string) => []),
+        .map<string, IProject[]>((id: string) => []),
       this.getProjects());
   }
 
-  update(project: IArgoProject): Observable<IArgoProject[]> {
+  update(project: IProject): Observable<IProject[]> {
     return this.http
       .post(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${project.id}`, project, { responseType: 'text' })
-      .map<string, IArgoProject[]>((id: string) => []);
+      .map<string, IProject[]>((id: string) => []);
   }
 
-  delete(id: string): Observable<IArgoProject[]> {
+  delete(id: string): Observable<IProject[]> {
     return  Observable.concat(
       this.http
         .delete(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${id}`, { responseType: 'text' })
-        .map<string, IArgoProject[]>((id: string) => []),
+        .map<string, IProject[]>((id: string) => []),
       this.getProjects())
   }
 

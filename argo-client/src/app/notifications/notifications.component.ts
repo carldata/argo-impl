@@ -4,7 +4,7 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
  
 @Component({
   selector: 'app-notifications',
-  template: '<toaster-container [toasterconfig]="config"></toaster-container>']
+  template: '<toaster-container [toasterconfig]="config"></toaster-container>'
 })
 export class NotificationsComponent implements OnInit {
   

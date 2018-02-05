@@ -4,7 +4,7 @@ import * as Papa from 'papaparse';
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Rx'
 import { IListItem } from '../model/list-item';
-import { IArgoProject } from '../model/argo-project';
+import { IProject } from '../model/project';
 import { tap } from 'rxjs/operators';
 import { IHttpEndpoint, HTTP_ENDPOINT } from './http-endpoint';
 import { IArgoTimeSeries } from '../model/argo-time-series';
@@ -52,23 +52,23 @@ export class HydraHttpBackendService {
       });
   }
   
-  public getProjects(): Observable<IArgoProject[]> {
+  public getProjects(): Observable<IProject[]> {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  public add(project: IArgoProject): Observable<IArgoProject[]> {
+  public add(project: IProject): Observable<IProject[]> {
     return this.wrapObservable(this.httpEndpoint.add(project), "Project added successfully");
   }
 
-  public update(project: IArgoProject): Observable<IArgoProject[]> {
+  public update(project: IProject): Observable<IProject[]> {
     return this.wrapObservable(this.httpEndpoint.update(project), "Project updated successfully");
   }
 
-  public delete(id: string): Observable<IArgoProject[]> {
+  public delete(id: string): Observable<IProject[]> {
     return this.wrapObservable(this.httpEndpoint.delete(id), "Project deleted successfully");
   }
 
-  private getTimeSeriesImplementation(project: IArgoProject, date: string): Observable<IArgoTimeSeries> {
+  private getTimeSeriesImplementation(project: IProject, date: string): Observable<IArgoTimeSeries> {
     let dateFrom = dateFns.format(new Date(date), "YYYY-MM-DD 00:00:00");
     let dateTo = dateFns.format(dateFns.addDays(new Date(date), 1), "YYYY-MM-DD 00:00:00");
     let papaParseConfig = (resolve) => _.extend({}, {
@@ -98,7 +98,7 @@ export class HydraHttpBackendService {
     }));
   }
 
-  public getTimeSeries(project: IArgoProject, date: string): Observable<IArgoTimeSeries> {
+  public getTimeSeries(project: IProject, date: string): Observable<IArgoTimeSeries> {
     return this.wrapObservable<IArgoTimeSeries>(this.getTimeSeriesImplementation(project, date));
   }
 }
