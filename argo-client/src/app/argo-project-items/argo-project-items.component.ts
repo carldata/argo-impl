@@ -17,20 +17,6 @@ export class ArgoProjectItemsComponent implements OnInit {
 
   constructor(private router: Router, private backendService: HydraHttpBackendService) { }
 
-  onProjectAddClicked() {
-    this.router.navigate([`${routeUrls.projectDetail}/${EnumArgoProjectDetailsComponentModes.Add}/${v4()}`]);
-  }
-
-  onProjectEditClicked(id: string) {
-    this.router.navigate([`${routeUrls.projectDetail}/${EnumArgoProjectDetailsComponentModes.Edit}/${id}`]);
-  }
-
-  onProjectDeleteClicked(id) {
-    this.backendService.delete(id).subscribe((projects) => {
-      this.projects = projects;
-    });
-  }
-
   ngOnInit() {
     this.backendService.getProjects().subscribe(projects => {
       this.projects = projects;
