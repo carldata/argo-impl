@@ -1,7 +1,8 @@
+import * as _ from "lodash";
 import { IEnvironmentContract } from "./contract";
+import { environment as defaultEnvironment } from "./environment";
 
-export const environment: IEnvironmentContract = {
-  production: true,
-  mockHttp: false,
-  googleCloudApiProjectInfo: "https://www.googleapis.com/storage/v1/b/argo-projects/o"
-};
+export const environment: IEnvironmentContract = _.extend<IEnvironmentContract, IEnvironmentContract>(
+  defaultEnvironment, <IEnvironmentContract> {
+    production: true
+  });

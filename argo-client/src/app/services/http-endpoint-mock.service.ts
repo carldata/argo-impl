@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import * as dateFns from 'date-fns';
 import * as Papa from 'papaparse';
 import { ParseResult } from 'papaparse';
 import { Injectable } from '@angular/core';
@@ -19,13 +20,17 @@ export class HttpEndpointMockService implements IHttpEndpoint {
   getProjects(): Observable<IProject[]> {
     return _.isUndefined(this.projects) ? 
       this.http
-        .get<IListItem[]>("assets/json/mock-projects.json")
-        .map<IListItem[], IProject[]>((list: IListItem[]) => {
-          this.projects = _.map(list, el => _.extend({}, el.data));
-          return this.projects;
-        }) :
+        .get<Object[]>("assets/json/mock-projects.json")
+        .map<Object[], IProject[]>((elements: Object[]) => 
+          _.reduce(elements, (items: IProject[], element: Object) =>  
+            _.concat(items, [
+              _.extend(element, <IProject> {
+                startDate: dateFns.parse(element["startDate"]),
+                endDate: dateFns.parse(element["endDate"]),
+                splitDate: dateFns.parse(element["splitDate"])
+              })]), [])):
       this.http
-        .get<IListItem[]>("assets/json/mock-empty-array.json")
-        .map<IListItem[], IProject[]>((list: IListItem[]) => this.projects)
+        .get<Object[]>("assets/json/mock-empty-array.json")
+        .map<Object[], IProject[]>((list: Object[]) => this.projects)
   }
 }

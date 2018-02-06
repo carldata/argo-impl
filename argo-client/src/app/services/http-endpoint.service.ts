@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';

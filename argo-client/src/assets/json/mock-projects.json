@@ -1,29 +1,22 @@
 [
   {
-    "id": "f64c12e2-3de6-4dae-a549-74d6455dfd0e",
-    "data": {
-      "id": "f64c12e2-3de6-4dae-a549-74d6455dfd0e",
-      "name": "mock-project-1",
-      "inputChannelId": "input-mock-01",
-      "outputChannelId": "output-mock-02"
-    }
+    "id": "asd42m413",
+    "name": "Mocked #1",
+    "url": "",
+    "startDate": "2016-01-12 10:30:00",
+    "endDate": "2016-02-15 11:45:00",
+    "splitDate": "2016-01-28 9:35:00",
+    "flows": [],
+    "rainfalls": []
   },
   {
-    "id": "88f19efd-4028-4df3-865d-2c46281bfab9",
-    "data": {
-      "id": "88f19efd-4028-4df3-865d-2c46281bfab9",
-      "name": "mock-project-2",
-      "inputChannelId": "input-mock-02",
-      "outputChannelId": "output-mock-02"
-    }
-  },
-  {
-    "id": "683bfe7c-6315-4808-9dd2-899a54685d2e",
-    "data": {
-      "id": "683bfe7c-6315-4808-9dd2-899a54685d2e",
-      "name": "mock-project-3",
-      "inputChannelId": "input-mock-03",
-      "outputChannelId": "output-mock-03"
-    }
+    "id": "d035dJav4",
+    "name": "Mocked #2",
+    "url": "",
+    "startDate": "2015-05-12 10:30:00",
+    "endDate": "2015-11-15 11:45:00",
+    "splitDate": "2015-07-28 9:35:00",
+    "flows": [],
+    "rainfalls": []
   }
 ]

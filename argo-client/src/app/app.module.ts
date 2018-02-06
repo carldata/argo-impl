@@ -22,6 +22,7 @@ import { LoaderScreenComponent } from './loader-screen/loader-screen.component';
 import { LoaderScreenService } from './loader-screen/loader-screen.service';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { NotificationsService } from './notifications/notifications.service';
+import { FormatPipe } from './pipes/format';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NotificationsService } from './notifications/notifications.service';
     ProjectsScreen,
     ArgoProjectTimeSeriesComponent,
     LoaderScreenComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    FormatPipe
   ],
   imports: [
     BrowserModule,
