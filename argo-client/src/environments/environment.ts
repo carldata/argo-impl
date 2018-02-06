@@ -3,5 +3,5 @@ import { IEnvironmentContract } from "./contract";
 export const environment: IEnvironmentContract = {
   production: false,
   mockHttp: false,
-  hydraHttpApiEndpointAddress: "http://localhost:8080"
+  googleCloudApiProjectInfo: "https://www.googleapis.com/storage/v1/b/argo-projects/o"
 };

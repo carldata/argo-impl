@@ -5,8 +5,7 @@ import { IProject } from '../model/project';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HydraHttpBackendService } from '../services/hydra-http-backend.service';
 import { routeUrls } from '../route-urls';
-import { IArgoTimeSeries } from '../model/argo-time-series';
-import { IDateTimeValue } from '../model/date-time-point';
+import { IDateTimeValue } from '../model/date-time-value';
 
 @Component({
   selector: 'app-argo-project-time-series',
@@ -40,10 +39,17 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
     }
   }
   public selectedDate: string = dateFns.format(new Date(), "YYYY-MM-DD");
-  public project: IProject = { id: "", name: "", inputChannelId: "", outputChannelId: "" };
+  public project: IProject = { 
+    id: "", 
+    name: "", 
+    startDate: new Date(), 
+    endDate: new Date(), 
+    splitDate: new Date(), 
+    flows: [], 
+    rainfalls: [] 
+  };
   
-  public dataInputChannelChart = [];
-  public dataOutputChannelChart = [];
+  public chartData = [];
 
   constructor(private router: Router, private route: ActivatedRoute, private backendService: HydraHttpBackendService) {
   }
@@ -56,18 +62,18 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
   }
 
   onLoadTimeSeries() {
-    this.backendService.getTimeSeries(this.project, this.selectedDate).subscribe((results: IArgoTimeSeries) => {
-      this.dataInputChannelChart = [{
-        values: results.inputChannelSeries,
-        key: 'Input channel',
-        color: 'orange'
-      }];
-      this.dataOutputChannelChart = [{
-        values: results.outputChannelSeries,
-        key: 'Output channel',
-        color: 'red'
-      }];
-    });
+    // this.backendService.getTimeSeries(this.project, this.selectedDate).subscribe((results: IArgoTimeSeries) => {
+    //   this.dataInputChannelChart = [{
+    //     values: results.inputChannelSeries,
+    //     key: 'Input channel',
+    //     color: 'orange'
+    //   }];
+    //   this.dataOutputChannelChart = [{
+    //     values: results.outputChannelSeries,
+    //     key: 'Output channel',
+    //     color: 'red'
+    //   }];
+    // });
   }
 
   onGoBack() {

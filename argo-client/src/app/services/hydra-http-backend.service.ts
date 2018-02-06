@@ -7,9 +7,8 @@ import { IListItem } from '../model/list-item';
 import { IProject } from '../model/project';
 import { tap } from 'rxjs/operators';
 import { IHttpEndpoint, HTTP_ENDPOINT } from './http-endpoint';
-import { IArgoTimeSeries } from '../model/argo-time-series';
 import { ParseResult } from 'papaparse';
-import { IDateTimeValue } from '../model/date-time-point';
+import { IDateTimeValue } from '../model/date-time-value';
 import { LoaderScreenService } from '../loader-screen/loader-screen.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -56,21 +55,9 @@ export class HydraHttpBackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  public add(project: IProject): Observable<IProject[]> {
-    return this.wrapObservable(this.httpEndpoint.add(project), "Project added successfully");
-  }
-
-  public update(project: IProject): Observable<IProject[]> {
-    return this.wrapObservable(this.httpEndpoint.update(project), "Project updated successfully");
-  }
-
-  public delete(id: string): Observable<IProject[]> {
-    return this.wrapObservable(this.httpEndpoint.delete(id), "Project deleted successfully");
-  }
-
-  private getTimeSeriesImplementation(project: IProject, date: string): Observable<IArgoTimeSeries> {
-    let dateFrom = dateFns.format(new Date(date), "YYYY-MM-DD 00:00:00");
-    let dateTo = dateFns.format(dateFns.addDays(new Date(date), 1), "YYYY-MM-DD 00:00:00");
+  private getTimeSeriesImplementation(url: string, date: string): Observable<IDateTimeValue> {
+    // let dateFrom = dateFns.format(new Date(date), "YYYY-MM-DD 00:00:00");
+    // let dateTo = dateFns.format(dateFns.addDays(new Date(date), 1), "YYYY-MM-DD 00:00:00");
     let papaParseConfig = (resolve) => _.extend({}, {
       header: true,
       skipEmptyLines: true,
@@ -82,23 +69,10 @@ export class HydraHttpBackendService {
         }));
       }
     });
-    let parsedInputChannelPromise = new Promise((resolve, reject) => 
-      Papa.parse(this.httpEndpoint.formatFetchTimeSeriesUrl(project.inputChannelId, dateFrom, dateTo), 
-                 papaParseConfig(resolve)));
-    let parsedOutputChannelPromise = new Promise((resolve, reject) => 
-      Papa.parse(this.httpEndpoint.formatFetchTimeSeriesUrl(project.outputChannelId, dateFrom, dateTo), 
-                 papaParseConfig(resolve)));
-    this.loaderScreenService.show();
-    return Observable.from(Promise.all([parsedInputChannelPromise, parsedOutputChannelPromise]).then((results) => {
-      let [inputData, outputData] = results;
-      return <IArgoTimeSeries> {
-        inputChannelSeries: inputData,
-        outputChannelSeries: outputData
-      }
-    }));
+    return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
   }
 
-  public getTimeSeries(project: IProject, date: string): Observable<IArgoTimeSeries> {
-    return this.wrapObservable<IArgoTimeSeries>(this.getTimeSeriesImplementation(project, date));
+  public getTimeSeries(url: string, date: string): Observable<IDateTimeValue> {
+    return this.wrapObservable<IDateTimeValue>(this.getTimeSeriesImplementation(url, date));
   }
 }

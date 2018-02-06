@@ -8,10 +8,10 @@ import { IHttpEndpoint } from './http-endpoint';
 import { IProject } from '../model/project';
 import { IListItem } from '../model/list-item';
 import { environment } from '../../environments/environment';
-import { IArgoTimeSeries } from '../model/argo-time-series';
 import * as Papa from 'papaparse';
 import { ParseResult } from 'papaparse';
-import { IDateTimeValue } from '../model/date-time-point';
+import { IDateTimeValue } from '../model/date-time-value';
+import { IGcObjects } from './models/gc-objects';
 
 @Injectable()
 export class HttpEndpointService implements IHttpEndpoint {
@@ -21,35 +21,11 @@ export class HttpEndpointService implements IHttpEndpoint {
 
   getProjects(): Observable<IProject[]> {
     return this.http
-      .get<IListItem[]>(`${environment.hydraHttpApiEndpointAddress}/items?app=${this.appName}`)
-      .map<IListItem[], IProject[]>((list: IListItem[]) => {
-        return _.map(list, el => _.extend({}, el.data));
+      .get<IGcObjects>(`${environment.googleCloudApiProjectInfo}`)
+      .map<IGcObjects, IProject[]>((element: IGcObjects) => {
+        console.log(element);
+        return [];
+        // return _.map(list, el => _.extend({}, el.data));
       });
-  }
-
-  add(project: IProject): Observable<IProject[]> {
-    return Observable.concat(
-      this.http
-        .post(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${project.id}`, project, { responseType: 'text' })
-        .map<string, IProject[]>((id: string) => []),
-      this.getProjects());
-  }
-
-  update(project: IProject): Observable<IProject[]> {
-    return this.http
-      .post(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${project.id}`, project, { responseType: 'text' })
-      .map<string, IProject[]>((id: string) => []);
-  }
-
-  delete(id: string): Observable<IProject[]> {
-    return  Observable.concat(
-      this.http
-        .delete(`${environment.hydraHttpApiEndpointAddress}/item?app=${this.appName}&id=${id}`, { responseType: 'text' })
-        .map<string, IProject[]>((id: string) => []),
-      this.getProjects())
-  }
-
-  formatFetchTimeSeriesUrl(channelId: string, dateFrom: string, dateTo: string): string {
-    return `${environment.hydraHttpApiEndpointAddress}/api/timeseries?id=${channelId}&startDate=${dateFrom}&endDate=${dateTo}`;
   }
 }

@@ -1,6 +1,11 @@
+import { ICsvDataSource } from "./csv-data-source";
+
 export interface IProject {
   id: string;
   name: string;
-  inputChannelId: string;
-  outputChannelId: string;
+  startDate: Date;
+  endDate: Date;
+  splitDate: Date;
+  flows: ICsvDataSource[];
+  rainfalls: ICsvDataSource[];
 }
