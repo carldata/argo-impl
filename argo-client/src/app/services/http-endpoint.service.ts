@@ -22,10 +22,46 @@ export class HttpEndpointService implements IHttpEndpoint {
   getProjects(): Observable<IProject[]> {
     return this.http
       .get<IGcObjects>(`${environment.googleCloudApiProjectInfo}`)
-      .map<IGcObjects, IProject[]>((element: IGcObjects) => {
-        console.log(element);
-        return [];
-        // return _.map(list, el => _.extend({}, el.data));
+      .map<IGcObjects, IProject[]>((objects: IGcObjects) => {
+          let result: IProject[] = [];
+          for (let object of objects.items) {
+            switch (object.contentType) {
+              case "application/json":
+                result.push(<IProject>{
+                  id: object.crc32c,
+                  name: ((nameSplit: string[]) => nameSplit.length > 0 ? _.first(nameSplit) : "")(_.split(object.name, "/")),
+                  url: object.mediaLink,
+                  startDate: null,
+                  endDate: null,
+                  splitDate: null,
+                  flows: [],
+                  rainfalls: []
+                });
+                break;
+              case "text/csv":
+                break;
+            }
+          }
+          return result;
+        })
+      .switchMap<IProject[], IProject[]>((projects: IProject[]) => {
+        let observablesInner: Observable<IProject>[] = [];
+        for (let project of projects) {
+          observablesInner.push(
+            this.http
+              .get<Object>(project.url)
+              .map<Object, IProject>((o: Object) => {
+                return _.extend(project, <IProject> {
+                  startDate: dateFns.parse(o["start-date"]),
+                  endDate: dateFns.parse(o["end-date"]),
+                  splitDate: dateFns.parse(o["split-date"]),
+                  flows: o["flows"],
+                  rainfalls: o["rainfalls"]
+                });
+              })
+            );
+        }
+        return Observable.forkJoin(observablesInner);
       });
   }
 }

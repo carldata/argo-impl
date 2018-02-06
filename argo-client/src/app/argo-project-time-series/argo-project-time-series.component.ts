@@ -39,9 +39,10 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
     }
   }
   public selectedDate: string = dateFns.format(new Date(), "YYYY-MM-DD");
-  public project: IProject = { 
-    id: "", 
-    name: "", 
+  public project: IProject = {
+    id: "",
+    name: "",
+    url: "",
     startDate: new Date(), 
     endDate: new Date(), 
     splitDate: new Date(), 
