@@ -11,6 +11,7 @@ import * as Papa from 'papaparse';
 import { ParseResult } from 'papaparse';
 import { IDateTimeValue } from '../model/date-time-value';
 import { IGcObjects } from './models/gc-objects';
+import { ICsvDataSource, EnumCsvDataSourceType } from '../model/csv-data-source';
 
 @Injectable()
 export class HttpEndpointService implements IHttpEndpoint {
@@ -19,6 +20,11 @@ export class HttpEndpointService implements IHttpEndpoint {
   constructor(private http: HttpClient) { }
 
   getProjects(): Observable<IProject[]> {
+    const getProjectName = (path: string): string => 
+      ((nameSplit: string[]) => nameSplit.length == 2 ? _.first(nameSplit) : "")(_.split(path, "/"));
+    const getCsvDataSourceName = (path: string): string => 
+      ((nameSplit: string[]) => nameSplit.length == 2 ? _.replace(nameSplit[1], ".csv", "") : "")(_.split(path, "/"))
+
     return this.http
       .get<IGcObjects>(`${environment.googleCloudApiProjectInfo}`)
       .map<IGcObjects, IProject[]>((objects: IGcObjects) => {
@@ -28,17 +34,28 @@ export class HttpEndpointService implements IHttpEndpoint {
               case "application/json":
                 result.push(<IProject>{
                   id: object.crc32c,
-                  name: ((nameSplit: string[]) => nameSplit.length > 0 ? _.first(nameSplit) : "")(_.split(object.name, "/")),
+                  name: getProjectName(object.name),
                   url: object.mediaLink,
                   startDate: null,
                   endDate: null,
                   splitDate: null,
-                  flows: [],
-                  rainfalls: []
+                  csvDataSources: [],
                 });
                 break;
-              case "text/csv":
-                break;
+              }
+            }
+            for (let object of objects.items) {
+              switch (object.contentType) {
+                case "text/csv":
+                  let project = _.find(result, el => el.name == getProjectName(object.name));
+                  if (_.isObject(project)) {
+                    project.csvDataSources.push(<ICsvDataSource> {
+                      name: getCsvDataSourceName(object.name),
+                      type: EnumCsvDataSourceType.NotClassified,
+                      url: object.mediaLink
+                    });
+                  }
+                  break;
             }
           }
           return result;
@@ -54,8 +71,17 @@ export class HttpEndpointService implements IHttpEndpoint {
                   startDate: dateFns.parse(o["start-date"]),
                   endDate: dateFns.parse(o["end-date"]),
                   splitDate: dateFns.parse(o["split-date"]),
-                  flows: o["flows"],
-                  rainfalls: o["rainfalls"]
+                  csvDataSources: _.map(project.csvDataSources, el => {
+                    return _.extend(_.clone(el), <ICsvDataSource> {
+                      type: ((flows: string[], rainfalls: string[]) => {
+                        if (_.includes(flows, el.name))
+                          return EnumCsvDataSourceType.Flow;
+                        if (_.includes(rainfalls, el.name))
+                          return EnumCsvDataSourceType.Rainfall;
+                        return EnumCsvDataSourceType.NotClassified;
+                      })(o["flows"], o["rainfalls"])
+                    });
+                  })
                 });
               })
             );

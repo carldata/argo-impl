@@ -7,6 +7,5 @@ export interface IProject {
   startDate: Date;
   endDate: Date;
   splitDate: Date;
-  flows: ICsvDataSource[];
-  rainfalls: ICsvDataSource[];
+  csvDataSources: ICsvDataSource[];
 }

@@ -21,8 +21,7 @@ import { routeUrls } from '../../../../route-urls';
         <small>Split date: {{ project.splitDate | format }}</small>
       </div>
       <div class="d-flex w-100">
-        <small>Flows: {{ project.flows | format }}</small>&nbsp;
-        <small>Rainfalls: {{ project.rainfalls | format }}</small>&nbsp;
+        <small>Csv data sources: {{ project.csvDataSources | format }}</small>&nbsp;
       </div>
     </li>
   `
