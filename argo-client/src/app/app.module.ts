@@ -18,7 +18,6 @@ import { HttpEndpointMockService } from './services/http-endpoint-mock.service';
 import { environment } from  '../environments/environment';
 import { HttpEndpointService } from './services/http-endpoint.service';
 import { AppRoutingModule } from './app-routing.module';
-import { ArgoProjectTimeSeriesComponent } from './argo-project-time-series/argo-project-time-series.component';
 import { LoaderScreenComponent } from './loader-screen/loader-screen.component';
 import { LoaderScreenService } from './loader-screen/loader-screen.service';
 import { NotificationsComponent } from './notifications/notifications.component';
@@ -33,7 +32,6 @@ import { PredictionsComponent } from './screens/project/components/predictions';
     AppComponent,
     ProjectItemComponent,
     ProjectsScreen,
-    ArgoProjectTimeSeriesComponent,
     LoaderScreenComponent,
     NotificationsComponent,
     FormatPipe,

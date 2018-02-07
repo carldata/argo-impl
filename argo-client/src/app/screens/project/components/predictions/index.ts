@@ -1,9 +1,10 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Inject } from '@angular/core';
 import { IDateTimeValue } from '../../../../model/date-time-value';
 import { IProject } from '../../../../model/project';
 import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-data-source';
+import { HydraHttpBackendService } from '../../../../services/hydra-http-backend.service';
 
 @Component({
   selector: 'predictions',
@@ -13,7 +14,7 @@ import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-dat
 export class PredictionsComponent implements OnInit, OnChanges {
   @Input() project: IProject = <IProject> { csvDataSources: [] };
   public flowChannels: ICsvDataSource[] = [];
-  public selectedFlowChannel: string = "No flow channels available !"
+  public selectedCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
   public selectedDate: string = dateFns.format(new Date(), "YYYY-MM-DD");
   public chartData = [];
   public chartOptions = {
@@ -42,33 +43,34 @@ export class PredictionsComponent implements OnInit, OnChanges {
     }
   }
 
-  constructor() { }
+  constructor(private backendService: HydraHttpBackendService) { }
 
   ngOnInit() {
   }
 
   ngOnChanges() {
-    this.flowChannels = _.filter(this.project.csvDataSources, el => el.type != EnumCsvDataSourceType.NotClassified);
+    this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
     if (this.flowChannels.length > 0)
-      this.selectedFlowChannel = _.first(this.flowChannels).name;
+      this.selectedCsvDataSource = _.first(this.flowChannels);
   }
 
   onDropDownClick(channelName: string) {
-    this.selectedFlowChannel = ((ch) => (ch && _.isString(ch.name) ? ch.name : this.selectedFlowChannel) )(_.find(this.project.csvDataSources, el => el.name == channelName));
+    this.selectedCsvDataSource = ((ch) => (ch && _.isString(ch.name) ? ch : this.selectedCsvDataSource) )(_.find(this.project.csvDataSources, el => el.name == channelName));
   }
 
   onLoadTimeSeries() {
-    // this.backendService.getTimeSeries(this.project, this.selectedDate).subscribe((results: IArgoTimeSeries) => {
-    //   this.dataInputChannelChart = [{
-    //     values: results.inputChannelSeries,
-    //     key: 'Input channel',
-    //     color: 'orange'
-    //   }];
-    //   this.dataOutputChannelChart = [{
-    //     values: results.outputChannelSeries,
-    //     key: 'Output channel',
-    //     color: 'red'
-    //   }];
-    // });
+    if (_.isString(this.selectedCsvDataSource.url))
+      this.backendService.getTimeSeries(this.selectedCsvDataSource.url, this.selectedDate, 
+        el => <IDateTimeValue> {
+          unixTimestamp: new Date(el.time).getTime(),
+          value: parseFloat(el.flow)
+        }
+      ).subscribe((results: IDateTimeValue[]) => {
+        this.chartData = [{
+          values: results,
+          key: 'Channel',
+          color: 'orange'
+        }]
+      });
   }
 }

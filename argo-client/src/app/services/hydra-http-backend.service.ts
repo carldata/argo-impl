@@ -55,24 +55,22 @@ export class HydraHttpBackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  private getTimeSeriesImplementation(url: string, date: string): Observable<IDateTimeValue> {
-    // let dateFrom = dateFns.format(new Date(date), "YYYY-MM-DD 00:00:00");
-    // let dateTo = dateFns.format(dateFns.addDays(new Date(date), 1), "YYYY-MM-DD 00:00:00");
+  private getTimeSeriesImplementation(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    let fromTimestamp = dateFns.getTime(new Date(date));
+    let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
     let papaParseConfig = (resolve) => _.extend({}, {
       header: true,
       skipEmptyLines: true,
       download: true,
       complete: (results: ParseResult) => {
-        resolve(_.map(results.data, el => <IDateTimeValue> {
-          unixTimestamp: new Date(el.time).getTime(),
-          value: parseFloat(el.value)
-        }));
+        resolve(_.map(results.data, mapRawElement)
+                 .filter((value) => _.inRange(value.unixTimestamp, fromTimestamp, toTimestamp)));
       }
     });
     return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
   }
 
-  public getTimeSeries(url: string, date: string): Observable<IDateTimeValue> {
-    return this.wrapObservable<IDateTimeValue>(this.getTimeSeriesImplementation(url, date));
+  public getTimeSeries(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    return this.wrapObservable<IDateTimeValue[]>(this.getTimeSeriesImplementation(url, date, mapRawElement));
   }
 }
