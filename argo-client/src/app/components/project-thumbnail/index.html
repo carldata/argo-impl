@@ -1,0 +1,14 @@
+<div class="d-flex w-100 justify-content-between">
+  <nav class="breadcrumb">
+    <a class="breadcrumb-item" (click)="navigate('/projects')">Projects</a>
+    <a class="breadcrumb-item" (click)="navigate('/project/'+project.id)">{{ project.name }}</a>
+  </nav>  
+</div>
+<div class="d-flex w-100">
+  <small>Start date: {{ project.startDate | format }}</small>&nbsp;
+  <small>End date: {{ project.endDate | format }}</small>&nbsp;
+  <small>Split date: {{ project.splitDate | format }}</small>
+</div>
+<div class="d-flex w-100">
+  <small>Csv data sources: {{ project.csvDataSources | format }}</small>&nbsp;
+</div>

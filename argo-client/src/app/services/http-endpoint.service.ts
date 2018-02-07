@@ -20,6 +20,7 @@ export class HttpEndpointService implements IHttpEndpoint {
   constructor(private http: HttpClient) { }
 
   getProjects(): Observable<IProject[]> {
+    const getProjectId = (id: string): string => _.replace(id, new RegExp('=', 'g'), "");
     const getProjectName = (path: string): string => 
       ((nameSplit: string[]) => nameSplit.length == 2 ? _.first(nameSplit) : "")(_.split(path, "/"));
     const getCsvDataSourceName = (path: string): string => 
@@ -33,12 +34,9 @@ export class HttpEndpointService implements IHttpEndpoint {
             switch (object.contentType) {
               case "application/json":
                 result.push(<IProject>{
-                  id: object.crc32c,
+                  id: getProjectId(object.crc32c),
                   name: getProjectName(object.name),
                   url: object.mediaLink,
-                  startDate: null,
-                  endDate: null,
-                  splitDate: null,
                   csvDataSources: [],
                 });
                 break;

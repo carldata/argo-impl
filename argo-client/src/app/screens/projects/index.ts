@@ -7,8 +7,7 @@ import { HydraHttpBackendService } from '../../services/hydra-http-backend.servi
 import { routeUrls } from '../../route-urls';
 
 @Component({
-  selector: 'projects-screen',
-  templateUrl: './screen.html'
+  templateUrl: './index.html'
 })
 export class ProjectsScreen implements OnInit {
   public projects: IProject[];

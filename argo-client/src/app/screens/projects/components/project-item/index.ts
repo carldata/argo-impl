@@ -7,24 +7,7 @@ import { routeUrls } from '../../../../route-urls';
 
 @Component({
   selector: 'project-item',
-  template: `
-    <li class="list-group-item list-group-item-action flex-column align-items-start">
-      <div class="d-flex w-100 justify-content-between">
-        <h5>{{ project.name }}</h5>
-        <div class="btn-group btn-group-toggle">
-          <button type class="btn btn-sm btn-success" (click)="selectClicked()">Select</button>
-        </div>
-      </div>
-      <div class="d-flex w-100">
-        <small>Start date: {{ project.startDate | format }}</small>&nbsp;
-        <small>End date: {{ project.endDate | format }}</small>&nbsp;
-        <small>Split date: {{ project.splitDate | format }}</small>
-      </div>
-      <div class="d-flex w-100">
-        <small>Csv data sources: {{ project.csvDataSources | format }}</small>&nbsp;
-      </div>
-    </li>
-  `
+  templateUrl: './index.html'
 })
 export class ProjectItemComponent implements OnInit {
   @Input() project: IProject;
@@ -34,7 +17,7 @@ export class ProjectItemComponent implements OnInit {
   ngOnInit() {
   }
 
-  selectClicked() {
-    this.router.navigate([`${routeUrls.projectTimeSeries}/${this.project.id}`]);
+  onSelectClicked() {
+    this.router.navigate([`${routeUrls.project}/${this.project.id}`]);
   }
 }

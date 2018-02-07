@@ -39,16 +39,6 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
     }
   }
   public selectedDate: string = dateFns.format(new Date(), "YYYY-MM-DD");
-  public project: IProject = {
-    id: "",
-    name: "",
-    url: "",
-    startDate: new Date(), 
-    endDate: new Date(), 
-    splitDate: new Date(), 
-    flows: [], 
-    rainfalls: [] 
-  };
   
   public chartData = [];
 
@@ -56,10 +46,6 @@ export class ArgoProjectTimeSeriesComponent implements OnInit {
   }
 
   ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    this.backendService.getProjects().subscribe((projects) => {
-      this.project =  _.find(projects, el => el.id == id);
-    });
   }
 
   onLoadTimeSeries() {

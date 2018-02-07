@@ -1,0 +1,9 @@
+.breadcrumb {
+  padding: 0;
+  background-color: transparent;
+}
+
+div .breadcrumb-item {
+  cursor: pointer;
+  color: #007bff;  
+}
