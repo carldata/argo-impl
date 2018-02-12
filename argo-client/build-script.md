@@ -1,5 +1,7 @@
 ## Building docker images
 
+These steps verify docker image is built correctly and can be deployed to k8s.
+
 * Create (the most up-to-date) dist folder containing Argo-Impl client application
 `ng build`
 
