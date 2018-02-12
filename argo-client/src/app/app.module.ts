@@ -26,6 +26,7 @@ import { FormatPipe } from './pipes/format';
 import { ProjectThumbnailComponent } from './components/project-thumbnail';
 import { ProjectScreen } from './screens/project';
 import { PredictionsComponent } from './screens/project/components/predictions';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { PredictionsComponent } from './screens/project/components/predictions';
     FormatPipe,
     ProjectThumbnailComponent,
     ProjectScreen,
-    PredictionsComponent
+    PredictionsComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
