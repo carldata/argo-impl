@@ -1,5 +1,8 @@
 ## Building docker images
 
+* Create (the most up-to-date) dist folder containing Argo-Impl client application
+`ng build`
+
 * Start docker daemon, then:
 `docker build -t flowworks-carlsolutions.azurecr.io/flowworks/argo-impl-client .`
 
@@ -30,4 +33,9 @@ kubectl create -f argo-impl-client.yaml
 
 ```
 kubectl expose deployment argo-impl-client --type=LoadBalancer --name=argo-impl-client
+```
+
+To get the IP address run:
+```
+kubectl get services
 ```
