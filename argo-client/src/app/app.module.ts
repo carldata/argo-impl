@@ -11,7 +11,7 @@ import { ToasterService, ToasterModule } from 'angular2-toaster';
 import { AppComponent } from './app.component';
 import { ProjectsScreen } from './screens/projects';
 import { ProjectItemComponent } from './screens/projects/components/project-item'
-import { HydraHttpBackendService } from './services/backend';
+import { BackendService } from './services/backend';
 import { HTTP_ENDPOINT } from './services/backend/variants/contract';
 import { HttpEndpointMockService } from './services/backend/variants/mock.service';
 import { HttpEndpointService } from './services/backend/variants/concrete.service';
@@ -53,7 +53,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
   ],
   providers: [
     ToasterService,
-    HydraHttpBackendService, 
+    BackendService, 
     {
       provide: HTTP_ENDPOINT,
       useClass: environment.mockHttp ? HttpEndpointMockService : HttpEndpointService

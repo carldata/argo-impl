@@ -6,8 +6,27 @@
     "startDate": "2016-01-12 10:30:00",
     "endDate": "2016-02-15 11:45:00",
     "splitDate": "2016-01-28 9:35:00",
-    "flows": [],
-    "rainfalls": []
+    "csvDataSources": [{
+      "name": "Mock-Flow #1",
+      "url": "",
+      "type": 1
+    }, {
+      "name": "Mock-Flow #2",
+      "url": "",
+      "type": 1
+    }, {
+      "name": "Mock-Flow #3",
+      "url": "",
+      "type": 1
+    }, {
+      "name": "Mock-Rainfall #1",
+      "url": "",
+      "type": 2
+    }, {
+      "name": "Mock-Rainfall #2",
+      "url": "",
+      "type": 2
+    }]
   },
   {
     "id": "d035dJav4",
@@ -16,7 +35,10 @@
     "startDate": "2015-05-12 10:30:00",
     "endDate": "2015-11-15 11:45:00",
     "splitDate": "2015-07-28 9:35:00",
-    "flows": [],
-    "rainfalls": []
+    "csvDataSources": [{
+      "name": "Mock-Flow #4",
+      "url": "",
+      "type": 1
+    }]
   }
 ]

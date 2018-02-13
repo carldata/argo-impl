@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
+import { Observable } from 'rxjs';
 import { Component, OnInit, Input, OnChanges, Inject } from '@angular/core';
 import { IDateTimeValue } from '../../../../model/date-time-value';
 import { IProject } from '../../../../model/project';
 import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-data-source';
-import { HydraHttpBackendService } from '../../../../services/backend';
+import { BackendService } from '../../../../services/backend';
 
 @Component({
   selector: 'predictions',
@@ -43,7 +44,7 @@ export class PredictionsComponent implements OnInit, OnChanges {
     }
   }
 
-  constructor(private backendService: HydraHttpBackendService) { }
+  constructor(private backendService: BackendService) { }
 
   ngOnInit() {
   }
@@ -59,18 +60,26 @@ export class PredictionsComponent implements OnInit, OnChanges {
   }
 
   onLoadTimeSeries() {
-    if (_.isString(this.selectedCsvDataSource.url))
-      this.backendService.getTimeSeries(this.selectedCsvDataSource.url, this.selectedDate, 
+    if (_.isString(this.selectedCsvDataSource.url)) {
+      const timeSeriesObservable = this.backendService.getTimeSeries(this.selectedCsvDataSource.url, this.selectedDate, 
         el => <IDateTimeValue> {
           unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         }
-      ).subscribe((results: IDateTimeValue[]) => {
+      );
+      const predictionsObservable = this.backendService.getPrediction(this.project.name, this.selectedCsvDataSource.name, new Date(this.selectedDate));
+      Observable.forkJoin(timeSeriesObservable, predictionsObservable).subscribe((results: IDateTimeValue[][]) => {
+        const [flow, predictions] = results;
         this.chartData = [{
-          values: results,
-          key: 'Channel',
+          values: flow,
+          key: 'Flow',
+          color: 'blue'
+        },{
+          values: predictions,
+          key: 'Predictions',
           color: 'orange'
         }]
       });
+    }
   }
 }

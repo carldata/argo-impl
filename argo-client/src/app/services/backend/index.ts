@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import * as Papa from 'papaparse';
+import 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { Injectable, Inject } from '@angular/core';
-import { Observable } from 'rxjs/Rx'
 import { IListItem } from '../../model/list-item';
 import { IProject } from '../../model/project';
-import { tap } from 'rxjs/operators';
 import { IHttpEndpoint, HTTP_ENDPOINT } from './variants/contract';
 import { ParseResult } from 'papaparse';
 import { IDateTimeValue } from '../../model/date-time-value';
@@ -14,7 +14,7 @@ import { NotificationsService } from '../../notifications/notifications.service'
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
-export class HydraHttpBackendService {
+export class BackendService {
   private httpEndpoint: IHttpEndpoint;
   private loaderScreenService: LoaderScreenService;
   private notificationsService: NotificationsService;
@@ -55,11 +55,11 @@ export class HydraHttpBackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  public getPrediction(date: Date): Observable<IDateTimeValue[]> {
-    return Observable.from([]);
+  public getPrediction(projectName: string, channelName: string, date: Date): Observable<IDateTimeValue[]> {
+    return this.wrapObservable(this.httpEndpoint.getPrediction(projectName, channelName, date));
   }
 
   public getTimeSeries(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    return this.wrapObservable<IDateTimeValue[]>(this.getTimeSeries(url, date, mapRawElement));
+    return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, date, mapRawElement));
   }
 }

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { IProject } from '../../model/project';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HydraHttpBackendService } from '../../services/backend';
+import { BackendService } from '../../services/backend';
 
 @Component({
   templateUrl: './index.html',
@@ -10,7 +10,7 @@ import { HydraHttpBackendService } from '../../services/backend';
 export class ProjectScreen implements OnInit {
   public project: IProject = <IProject> { id: "" };
   
-  constructor(private router: Router, private route: ActivatedRoute, private backendService: HydraHttpBackendService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private backendService: BackendService) { }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');

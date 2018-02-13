@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import { Observable } from 'rxjs/Observable';
+import 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import * as Papa from 'papaparse';
 import { ParseResult } from 'papaparse';
@@ -94,10 +95,6 @@ export class HttpEndpointService implements IHttpEndpoint {
         ));
   }
 
-  public getPrediction(date: Date): Observable<IDateTimeValue[]> {
-    return Observable.from([]);
-  }
-
   public getTimeSeries(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
     let fromTimestamp = dateFns.getTime(new Date(date));
     let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
@@ -111,5 +108,9 @@ export class HttpEndpointService implements IHttpEndpoint {
       }
     });
     return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
+  }
+
+  public getPrediction(projectName: string, channelName: string, date: Date): Observable<IDateTimeValue[]> {
+    return Observable.from([]);
   }
 }

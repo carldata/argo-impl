@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { v4 } from 'uuid';
 import { IProject } from '../../model/project';
 import { routeUrls } from '../../route-urls';
-import { HydraHttpBackendService } from '../../services/backend';
+import { BackendService } from '../../services/backend';
 
 @Component({
   templateUrl: './index.html'
@@ -12,7 +12,7 @@ import { HydraHttpBackendService } from '../../services/backend';
 export class ProjectsScreen implements OnInit {
   public projects: IProject[];
 
-  constructor(private router: Router, private backendService: HydraHttpBackendService) { }
+  constructor(private router: Router, private backendService: BackendService) { }
 
   ngOnInit() {
     this.backendService.getProjects().subscribe(projects => {
