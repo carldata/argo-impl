@@ -11,12 +11,12 @@ import { ToasterService, ToasterModule } from 'angular2-toaster';
 import { AppComponent } from './app.component';
 import { ProjectsScreen } from './screens/projects';
 import { ProjectItemComponent } from './screens/projects/components/project-item'
-import { HydraHttpBackendService } from './services/hydra-http-backend.service';
-import { IHttpEndpoint, HTTP_ENDPOINT } from './services/http-endpoint';
+import { HydraHttpBackendService } from './services/backend';
+import { HTTP_ENDPOINT } from './services/backend/variants/contract';
+import { HttpEndpointMockService } from './services/backend/variants/mock.service';
+import { HttpEndpointService } from './services/backend/variants/concrete.service';
 import { FormsModule } from '@angular/forms';
-import { HttpEndpointMockService } from './services/http-endpoint-mock.service';
 import { environment } from  '../environments/environment';
-import { HttpEndpointService } from './services/http-endpoint.service';
 import { AppRoutingModule } from './app-routing.module';
 import { LoaderScreenComponent } from './loader-screen/loader-screen.component';
 import { LoaderScreenService } from './loader-screen/loader-screen.service';

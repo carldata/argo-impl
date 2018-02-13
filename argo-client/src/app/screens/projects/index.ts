@@ -3,8 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { v4 } from 'uuid';
 import { IProject } from '../../model/project';
-import { HydraHttpBackendService } from '../../services/hydra-http-backend.service';
 import { routeUrls } from '../../route-urls';
+import { HydraHttpBackendService } from '../../services/backend';
 
 @Component({
   templateUrl: './index.html'

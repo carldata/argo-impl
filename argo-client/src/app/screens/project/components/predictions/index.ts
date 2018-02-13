@@ -4,7 +4,7 @@ import { Component, OnInit, Input, OnChanges, Inject } from '@angular/core';
 import { IDateTimeValue } from '../../../../model/date-time-value';
 import { IProject } from '../../../../model/project';
 import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-data-source';
-import { HydraHttpBackendService } from '../../../../services/hydra-http-backend.service';
+import { HydraHttpBackendService } from '../../../../services/backend';
 
 @Component({
   selector: 'predictions',

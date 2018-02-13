@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { HydraHttpBackendService } from './hydra-http-backend.service';
+import { HydraHttpBackendService } from '../backend';
 
-describe('HydraHttpBackendService', () => {
+describe('BackendService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [HydraHttpBackendService]

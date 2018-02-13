@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { HttpEndpointMockService } from './http-endpoint-mock.service';
+import { HttpEndpointMockService } from './mock.service';
 
 describe('HttpEndpointMockService', () => {
   beforeEach(() => {

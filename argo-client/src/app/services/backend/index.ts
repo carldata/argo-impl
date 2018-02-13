@@ -3,14 +3,14 @@ import * as dateFns from 'date-fns';
 import * as Papa from 'papaparse';
 import { Injectable, Inject } from '@angular/core';
 import { Observable } from 'rxjs/Rx'
-import { IListItem } from '../model/list-item';
-import { IProject } from '../model/project';
+import { IListItem } from '../../model/list-item';
+import { IProject } from '../../model/project';
 import { tap } from 'rxjs/operators';
-import { IHttpEndpoint, HTTP_ENDPOINT } from './http-endpoint';
+import { IHttpEndpoint, HTTP_ENDPOINT } from './variants/contract';
 import { ParseResult } from 'papaparse';
-import { IDateTimeValue } from '../model/date-time-value';
-import { LoaderScreenService } from '../loader-screen/loader-screen.service';
-import { NotificationsService } from '../notifications/notifications.service';
+import { IDateTimeValue } from '../../model/date-time-value';
+import { LoaderScreenService } from '../../loader-screen/loader-screen.service';
+import { NotificationsService } from '../../notifications/notifications.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable()
@@ -55,22 +55,11 @@ export class HydraHttpBackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  private getTimeSeriesImplementation(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    let fromTimestamp = dateFns.getTime(new Date(date));
-    let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
-    let papaParseConfig = (resolve) => _.extend({}, {
-      header: true,
-      skipEmptyLines: true,
-      download: true,
-      complete: (results: ParseResult) => {
-        resolve(_.map(results.data, mapRawElement)
-                 .filter((value) => _.inRange(value.unixTimestamp, fromTimestamp, toTimestamp)));
-      }
-    });
-    return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
+  public getPrediction(date: Date): Observable<IDateTimeValue[]> {
+    return Observable.from([]);
   }
 
   public getTimeSeries(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    return this.wrapObservable<IDateTimeValue[]>(this.getTimeSeriesImplementation(url, date, mapRawElement));
+    return this.wrapObservable<IDateTimeValue[]>(this.getTimeSeries(url, date, mapRawElement));
   }
 }

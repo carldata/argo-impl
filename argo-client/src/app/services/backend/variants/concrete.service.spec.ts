@@ -1,6 +1,6 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { HttpEndpointService } from './http-endpoint.service';
+import { HttpEndpointService } from './concrete.service';
 
 describe('HttpEndpointService', () => {
   beforeEach(() => {

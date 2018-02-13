@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { IProject } from '../../model/project';
 import { Router, ActivatedRoute } from '@angular/router';
-import { HydraHttpBackendService } from '../../services/hydra-http-backend.service';
+import { HydraHttpBackendService } from '../../services/backend';
 
 @Component({
   templateUrl: './index.html',
