@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Observable } from 'rxjs';
-import { Component, OnInit, Input, OnChanges, Inject } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, Inject, HostListener } from '@angular/core';
 import { IDateTimeValue } from '../../../../model/date-time-value';
 import { IProject } from '../../../../model/project';
 import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-data-source';
@@ -10,7 +10,7 @@ import { BackendService } from '../../../../services/backend';
 @Component({
   selector: 'predictions',
   templateUrl: './index.html',
-  styleUrls: ['./index.css']
+  styleUrls: ['./index.scss'],
 })
 export class PredictionsComponent implements OnInit, OnChanges {
   @Input() project: IProject = <IProject> { csvDataSources: [] };
@@ -46,7 +46,22 @@ export class PredictionsComponent implements OnInit, OnChanges {
 
   constructor(private backendService: BackendService) { }
 
+  private updateChartSize() {
+    this.chartOptions = _.extend({}, this.chartOptions, {
+      chart: _.extend({}, this.chartOptions.chart, {
+        width: window.innerWidth-50,
+        height: window.innerHeight-220
+      })
+    });
+  }
+
   ngOnInit() {
+    this.updateChartSize();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateChartSize();
   }
 
   ngOnChanges() {
@@ -76,7 +91,7 @@ export class PredictionsComponent implements OnInit, OnChanges {
           color: 'blue'
         },{
           values: predictions,
-          key: 'Predictions',
+          key: 'Prediction',
           color: 'orange'
         }]
       });

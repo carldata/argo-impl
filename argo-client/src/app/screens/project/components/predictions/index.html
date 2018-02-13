@@ -12,6 +12,6 @@
     <button type="button" class="btn btn-success" (click)="onLoadTimeSeries()">Load Time Series</button>
   </div>
   <div class="form-inline">
-    <nvd3 [options]="chartOptions" [data]="chartData"></nvd3>
+    <nvd3 class="d3chart" [options]="chartOptions" [data]="chartData" ></nvd3>
   </div>
 </form>
