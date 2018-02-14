@@ -1,0 +1,18 @@
+/* Based on https://scotch.io/tutorials/using-sass-with-the-angular-cli */
+@import './variables';
+@import './mixins';
+
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~angular2-toaster/toaster.css";
+
+body {
+  padding: 10px;
+}
+.form-inline > * {
+  margin:5px 3px;
+}
+
+:export {
+  greeting: $greeting;
+}
