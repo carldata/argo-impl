@@ -2,7 +2,9 @@ import { Action } from '@ngrx/store';
 
 export const INCREMENT = 'INCREMENT';
 export const DECREMENT = 'DECREMENT';
+export const RESET_START = 'RESET_START';
 export const RESET = 'RESET';
+export const FAIL = 'FAIL';
 
 export function counterReducer(state: number = 0, action: Action) {
   switch (action.type) {

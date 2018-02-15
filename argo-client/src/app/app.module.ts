@@ -28,7 +28,10 @@ import { ProjectThumbnailComponent } from './components/project-thumbnail';
 import { ProjectScreen } from './screens/project';
 import { PredictionsComponent } from './screens/project/components/predictions';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { counterReducer } from './reducers/counter';
+import { CounterComponent } from './components/counter/counter.component';
+import { counterReducer } from './components/counter/reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { CounterEffects } from './components/counter/effects';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,8 @@ import { counterReducer } from './reducers/counter';
     ProjectThumbnailComponent,
     ProjectScreen,
     PredictionsComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    CounterComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +56,8 @@ import { counterReducer } from './reducers/counter';
     NvD3Module,
     NgbModule.forRoot(),
     ToasterModule,
-    StoreModule.forRoot({ count: counterReducer })
+    StoreModule.forRoot({ count: counterReducer }),
+    EffectsModule.forRoot([CounterEffects])
   ],
   providers: [
     ToasterService,
