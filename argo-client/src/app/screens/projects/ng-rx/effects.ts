@@ -7,8 +7,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { BackendService } from '../../../services/backend/index';
 import { IProject } from '../../../model/project';
-import { ProjectsLoadedAction } from './actions';
-import { FailureNotificationAction } from '../../../ng-rx/default-actions';
+import { FailureNotificationAction, ActionWithPayload } from '../../../ng-rx/default-actions';
 import { FETCH_PROJECTS_STARTED, FETCH_PROJECTS_SUCCEEDED, FETCH_PROJECTS_FAILED } from './action-types';
 
 @Injectable()
@@ -18,7 +17,7 @@ export class ProjectsScreenEffects {
     private actions$: Actions
   ) {}
 
-  @Effect() getProjects$: Observable<ProjectsLoadedAction|FailureNotificationAction> = this.actions$.pipe(
+  @Effect() getProjects$: Observable<ActionWithPayload<IProject[]>|FailureNotificationAction> = this.actions$.pipe(
     ofType(FETCH_PROJECTS_STARTED),
     mergeMap(action => 
       this.backendService.getProjects().pipe(

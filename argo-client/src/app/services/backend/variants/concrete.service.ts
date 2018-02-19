@@ -27,7 +27,6 @@ export class HttpEndpointService implements IHttpEndpoint {
    * Some separate project http requests have to be made.
    */
   private fetchProjectsInGoogleCloudStorageObjectList(objects: IGcObjects): IProject[] {
-    const getProjectId = (id: string): string => _.replace(id, new RegExp('=', 'g'), "");
     const getProjectName = (path: string): string => 
       ((nameSplit: string[]) => nameSplit.length == 2 ? _.first(nameSplit) : "")(_.split(path, "/"));
     const getCsvDataSourceName = (path: string): string => 
@@ -38,7 +37,7 @@ export class HttpEndpointService implements IHttpEndpoint {
       switch (object.contentType) {
         case "application/json":
           result.push(<IProject>{
-            id: getProjectId(object.crc32c),
+            id: getProjectName(object.name),
             name: getProjectName(object.name),
             url: object.mediaLink,
             csvDataSources: [],

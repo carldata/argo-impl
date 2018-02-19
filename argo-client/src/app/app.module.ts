@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { NvD3Module } from 'ng2-nvd3';
 import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToasterService, ToasterModule } from 'angular2-toaster';
 import { AppComponent } from './app.component';
@@ -32,6 +33,8 @@ import { projectsScreenReducer } from './screens/projects/ng-rx/reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { IAppState } from './model/app-state';
 import { ProjectsScreenEffects } from './screens/projects/ng-rx/effects';
+import { ProjectScreenEffects } from './screens/project/ng-rx/effects';
+import { projectScreenReducer } from './screens/project/ng-rx/reducer';
 
 @NgModule({
   declarations: [
@@ -56,9 +59,14 @@ import { ProjectsScreenEffects } from './screens/projects/ng-rx/effects';
     NgbModule.forRoot(),
     ToasterModule,
     StoreModule.forRoot({ 
-      projectsScreenState: projectsScreenReducer
+      projectsScreenState: projectsScreenReducer,
+      projectScreenState: projectScreenReducer
     }),
-    EffectsModule.forRoot([ProjectsScreenEffects])
+    EffectsModule.forRoot([ProjectsScreenEffects, ProjectScreenEffects]),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25, // Retains last 25 states
+      logOnly: environment.production // Restrict extension to log-only mode
+    })
   ],
   providers: [
     ToasterService,
