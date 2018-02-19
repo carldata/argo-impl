@@ -5,6 +5,10 @@ import { v4 } from 'uuid';
 import { IProject } from '../../model/project';
 import { routeUrls } from '../../route-urls';
 import { BackendService } from '../../services/backend';
+import { Store, select } from '@ngrx/store';
+import { IAppState } from '../../model/app-state';
+import { Observable } from 'rxjs/Observable';
+import { FETCH_PROJECTS_STARTED } from './ng-rx/action-types';
 
 @Component({
   templateUrl: './index.html'
@@ -12,11 +16,13 @@ import { BackendService } from '../../services/backend';
 export class ProjectsScreen implements OnInit {
   public projects: IProject[];
 
-  constructor(private router: Router, private backendService: BackendService) { }
+  constructor(private router: Router, private store: Store<IAppState>) { 
+    store
+      .pipe(select((store) => store.projectsScreenState.projects))
+      .subscribe((result) => this.projects = result);
+  }
 
   ngOnInit() {
-    this.backendService.getProjects().subscribe(projects => {
-      this.projects = projects;
-    });
+    this.store.dispatch({ type: FETCH_PROJECTS_STARTED });
   }
 }

@@ -5,7 +5,7 @@ export interface IChartState {
   predictions: IDateTimeValue[];
 }
 
-export interface IProjectScreeState {
+export interface IProjectScreenState {
   selectedFlowChannel: string;
   selectedDate: Date;
   chartState: IChartState;
