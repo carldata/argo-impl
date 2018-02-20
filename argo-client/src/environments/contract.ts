@@ -2,5 +2,6 @@ export interface IEnvironmentContract {
   production: boolean;
   mockHttp: boolean;
   dateFormat: string;
-  googleCloudApiProjectInfo: string; 
+  googleCloudApiProjectInfoUrl: string; 
+  predictionsBackendUrl: string; 
 }

@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IProject } from '../../../model/project';
 import { IListItem } from '../../../model/list-item';
 import { IDateTimeValue } from '../../../model/date-time-value';
-import { IHttpEndpoint } from './contract';
+import { IHttpEndpoint, ICsvRowObject } from './contract';
 
 @Injectable()
 export class HttpEndpointMockService implements IHttpEndpoint {
@@ -47,7 +47,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
         return result;
       });
   
-  public getPrediction = (projectName: string, channelName: string, date: string): Observable<IDateTimeValue[]> =>
+  public getPrediction = (url: string, projectName: string, channelName: string, date: string,  map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> =>
     this.http
       .get<Object[]>("assets/json/mock-empty-array.json")
       .map<Object[], IDateTimeValue[]>(() => {
