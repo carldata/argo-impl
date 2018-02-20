@@ -1,21 +1,25 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Observable } from 'rxjs';
-import { Component, OnInit, Input, OnChanges, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
 import { IDateTimeValue } from '../../../../model/date-time-value';
 import { IProject } from '../../../../model/project';
 import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-data-source';
 import { BackendService } from '../../../../services/backend';
 import { Store, select } from '@ngrx/store';
 import { IAppState } from '../../../../model/app-state';
-import { PREDICTIONS_FETCH_TIME_SERIES_STARTED } from '../../ng-rx/action-types';
+import * as actionTypes from '../../ng-rx/action-types';
+import * as actions from '../../ng-rx/actions';
+import { IPredictionsTab } from '../../ng-rx/state';
+import { IPredictionsTabFetchDataStartedPayload } from '../../ng-rx/payloads';
+import { environment } from '../../../../../environments/environment.prod';
 
 @Component({
   selector: 'predictions',
   templateUrl: './index.html',
   styleUrls: ['./index.scss'],
 })
-export class PredictionsComponent implements OnInit, OnChanges {
+export class PredictionsComponent implements OnInit {
   @Input() project: IProject = <IProject> { csvDataSources: [] };
   public flowChannels: ICsvDataSource[] = [];
   public selectedCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
@@ -60,15 +64,23 @@ export class PredictionsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.updateChartSize();
+    this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
     this.store
-      .pipe(select((store) => store.projectScreenState.predictionsTab.selectedDate ))
-      .subscribe((date: string) => {
-        
-        // this.project = project;
-        // this.store.dispatch({ 
-        //   type: SELECT_PROJECT,
-        //   payload: project
-        // })
+      .pipe(select((store) => store.projectScreenState.predictionsTab ))
+      .subscribe((tabState: IPredictionsTab) => {
+        this.selectedDate = tabState.selectedDate;
+        this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == tabState.selectedFlowChannel);
+        if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
+          this.selectedCsvDataSource = _.first(this.flowChannels);
+        this.chartData = [{
+          values: tabState.flow,
+          key: 'Flow',
+          color: 'blue'
+        },{
+          values: tabState.predictions,
+          key: 'Prediction',
+          color: 'orange'
+        }]
       });
   }
 
@@ -77,42 +89,29 @@ export class PredictionsComponent implements OnInit, OnChanges {
     this.updateChartSize();
   }
 
-  ngOnChanges() {
-    this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
-    if (this.flowChannels.length > 0)
-      this.selectedCsvDataSource = _.first(this.flowChannels);
-  }
-
-  onSelectedDateChanged(x: any) {
-    console.log(x);
+  onSelectedDateChanged(date: string) {
+    this.store.dispatch(new actions.PredictionsDateChangedAction(date));
   }
 
   onDropDownClick(channelName: string) {
     this.selectedCsvDataSource = ((ch) => (ch && _.isString(ch.name) ? ch : this.selectedCsvDataSource) )(_.find(this.project.csvDataSources, el => el.name == channelName));
+    if (_.isObject(this.selectedCsvDataSource)) {
+      this.store.dispatch(new actions.PredictionsFlowChannelChangedAction(channelName));
+    }
   }
 
   onLoadTimeSeries() {
     if (_.isString(this.selectedCsvDataSource.url)) {
-      this.store.dispatch({ type: PREDICTIONS_FETCH_TIME_SERIES_STARTED });
-      // const timeSeriesObservable = this.backendService.getTimeSeries(this.selectedCsvDataSource.url, this.selectedDate, 
-      //   el => <IDateTimeValue> {
-      //     unixTimestamp: new Date(el.time).getTime(),
-      //     value: parseFloat(el.flow)
-      //   }
-      // );
-      // const predictionsObservable = this.backendService.getPrediction(this.project.name, this.selectedCsvDataSource.name, new Date(this.selectedDate));
-      // Observable.forkJoin(timeSeriesObservable, predictionsObservable).subscribe((results: IDateTimeValue[][]) => {
-      //   const [flow, predictions] = results;
-      //   this.chartData = [{
-      //     values: flow,
-      //     key: 'Flow',
-      //     color: 'blue'
-      //   },{
-      //     values: predictions,
-      //     key: 'Prediction',
-      //     color: 'orange'
-      //   }]
-      // });
+      this.store.dispatch(new actions.PredictionsFetchDataStartedAction({ 
+        channelName: this.selectedCsvDataSource.name,
+        date: dateFns.format(new Date(this.selectedDate), environment.dateFormat),
+        mapRawElement: el => <IDateTimeValue> {
+          unixTimestamp: new Date(el.time).getTime(),
+          value: parseFloat(el.flow)
+        },
+        projectName: this.project.name,
+        timeSeriesUrl: this.selectedCsvDataSource.url
+      }));
     }
   }
 }

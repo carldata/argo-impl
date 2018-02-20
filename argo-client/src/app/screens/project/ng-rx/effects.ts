@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as actionTypes from './action-types';
+import * as actions from './actions';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
@@ -8,9 +9,9 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { BackendService } from '../../../services/backend/index';
 import { IProject } from '../../../model/project';
-import { ActionWithPayload } from '../../../ng-rx/default-actions';
-import { IFetchTimeSeriesPayload } from './actions';
 import { IDateTimeValue } from '../../../model/date-time-value';
+import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
+import { GeneralErrorAction } from '../../../ng-rx/actions';
 
 @Injectable()
 export class ProjectScreenEffects {
@@ -19,18 +20,27 @@ export class ProjectScreenEffects {
     private actions$: Actions
   ) { }
 
-  @Effect() getTimeSeries$: Observable<ActionWithPayload<IDateTimeValue[]>> = this.actions$.pipe(
-    ofType(actionTypes.PREDICTIONS_FETCH_TIME_SERIES_STARTED),
-    mergeMap((action: ActionWithPayload<IFetchTimeSeriesPayload>) => 
-      this.backendService.getTimeSeries(action.payload.url, action.payload.date, action.payload.mapRawElement).pipe(
-        map((timeSeries: IDateTimeValue[]) => ({ 
-          type: actionTypes.PREDICTIONS_FETCH_TIME_SERIES_SUCCEEDED, 
-          payload: timeSeries 
-        })),
-        catchError((e) => of({ 
-          type: actionTypes.PREDICTIONS_FETCH_TIME_SERIES_FAILED,
-          payload: e }))
-      )
-    )
-  );
+  @Effect() getTimeSeries$: Observable<actions.PredictionsFetchDataSucceededAction|GeneralErrorAction> = this.actions$
+    .pipe(
+      ofType(actionTypes.PREDICTIONS_TAB_FETCH_DATA_STARTED),
+      mergeMap((action: actions.PredictionsFetchDataStartedAction) => { 
+        const timeSeriesObservable = this.backendService.getTimeSeries(
+          action.parameters.timeSeriesUrl, 
+          action.parameters.date, 
+          action.parameters.mapRawElement);
+        const predictionsObservable = this.backendService.getPrediction(
+          action.parameters.projectName, 
+          action.parameters.channelName,
+          action.parameters.date);
+        return Observable.forkJoin(timeSeriesObservable, predictionsObservable).pipe(
+          map((results: IDateTimeValue[][]) => 
+            new actions.PredictionsFetchDataSucceededAction({
+              measuredFlow: results[0],
+              predictionFlow: results[1]
+            })
+          ),
+          catchError(e => of(new GeneralErrorAction(e)))
+        )
+      })
+    );
 }

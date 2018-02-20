@@ -109,7 +109,7 @@ export class HttpEndpointService implements IHttpEndpoint {
     return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
   }
 
-  public getPrediction(projectName: string, channelName: string, date: Date): Observable<IDateTimeValue[]> {
-    return Observable.from([]);
+  public getPrediction(projectName: string, channelName: string, date: string): Observable<IDateTimeValue[]> {
+    return Observable.of([]);
   }
 }

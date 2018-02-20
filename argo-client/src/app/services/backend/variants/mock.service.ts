@@ -47,7 +47,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
         return result;
       });
   
-  public getPrediction = (projectName: string, channelName: string, date: Date): Observable<IDateTimeValue[]> =>
+  public getPrediction = (projectName: string, channelName: string, date: string): Observable<IDateTimeValue[]> =>
     this.http
       .get<Object[]>("assets/json/mock-empty-array.json")
       .map<Object[], IDateTimeValue[]>(() => {

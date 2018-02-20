@@ -55,7 +55,7 @@ export class BackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  public getPrediction(projectName: string, channelName: string, date: Date): Observable<IDateTimeValue[]> {
+  public getPrediction(projectName: string, channelName: string, date: string): Observable<IDateTimeValue[]> {
     return this.wrapObservable(this.httpEndpoint.getPrediction(projectName, channelName, date));
   }
 
