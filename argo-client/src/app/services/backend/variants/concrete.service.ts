@@ -8,11 +8,8 @@ import { ParseResult } from 'papaparse';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IHttpEndpoint, ICsvRowObject } from './contract';
 import { IGcObjects } from '../models/gc-objects';
-import { IProject } from '../../../model/project';
-import { IListItem } from '../../../model/list-item';
 import { environment } from '../../../../environments/environment';
-import { IDateTimeValue } from '../../../model/date-time-value';
-import { ICsvDataSource, EnumCsvDataSourceType } from '../../../model/csv-data-source';
+import { IProject, ICsvDataSource, EnumCsvDataSourceType, IDateTimeValue } from '@app-state/.';
 
 @Injectable()
 export class HttpEndpointService implements IHttpEndpoint {

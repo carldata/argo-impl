@@ -4,14 +4,12 @@ import * as Papa from 'papaparse';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Rx';
 import { Injectable, Inject } from '@angular/core';
-import { IListItem } from '../../model/list-item';
-import { IProject } from '../../model/project';
 import { IHttpEndpoint, HTTP_ENDPOINT, ICsvRowObject } from './variants/contract';
 import { ParseResult } from 'papaparse';
-import { IDateTimeValue } from '../../model/date-time-value';
 import { LoaderScreenService } from '../../loader-screen/loader-screen.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { IProject, IDateTimeValue } from '@app-state/.';
 
 @Injectable()
 export class BackendService {

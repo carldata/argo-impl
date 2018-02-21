@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-import { IProject } from '../../model/project';
+import { IProject } from '@app-state/.';
 import { routeUrls } from '../../route-urls';
 
 @Component({

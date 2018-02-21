@@ -31,7 +31,7 @@ import { PredictionsComponent } from './screens/project/components/predictions';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { projectsScreenReducer } from './screens/projects/ng-rx/reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { IAppState } from './model/app-state';
+import { IAppState } from '@app-state/.';
 import { ProjectsScreenEffects } from './screens/projects/ng-rx/effects';
 import { ProjectScreenEffects } from './screens/project/ng-rx/effects';
 import { projectScreenReducer } from './screens/project/ng-rx/reducer';

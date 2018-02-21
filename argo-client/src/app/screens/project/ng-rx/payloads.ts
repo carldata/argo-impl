@@ -1,6 +1,6 @@
-import { IDateTimeValue } from "../../../model/date-time-value";
 import { Action } from "@ngrx/store";
 import { ICsvRowObject } from "../../../services/backend/variants/contract";
+import { IDateTimeValue } from "@app-state/date-time-value";
 
 export interface IPredictionsTabFetchDataStartedPayload {
   timeSeriesUrl: string;

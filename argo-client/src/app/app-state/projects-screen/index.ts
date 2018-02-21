@@ -1,4 +1,4 @@
-import { IProject } from "../../../model/project";
+import { IProject } from "@app-state/project";
 
 export interface IProjectsScreenState {
   projects: IProject[];

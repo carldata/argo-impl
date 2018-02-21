@@ -6,10 +6,9 @@ import { Observable } from 'rxjs/Rx';
 import { ParseResult } from 'papaparse';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { IProject } from '../../../model/project';
-import { IListItem } from '../../../model/list-item';
-import { IDateTimeValue } from '../../../model/date-time-value';
 import { IHttpEndpoint, ICsvRowObject } from './contract';
+import { IProject } from '@app-state/.';
+import { IDateTimeValue } from '@app-state/date-time-value';
 
 @Injectable()
 export class HttpEndpointMockService implements IHttpEndpoint {

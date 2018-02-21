@@ -8,10 +8,9 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { BackendService } from '../../../services/backend/index';
-import { IProject } from '../../../model/project';
-import { IDateTimeValue } from '../../../model/date-time-value';
 import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
 import { GeneralErrorAction } from '../../../ng-rx/actions';
+import { IDateTimeValue } from '@app-state/date-time-value';
 
 @Injectable()
 export class ProjectScreenEffects {
