@@ -27,13 +27,13 @@ export class ProjectScreenEffects {
         const timeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.timeSeriesUrl, 
           action.parameters.date, 
-          action.parameters.map);
+          action.parameters.flowMap);
         const predictionsObservable = this.backendService.getPrediction(
           action.parameters.predictionsUrl,
           action.parameters.projectName, 
           action.parameters.channelName,
           action.parameters.date,
-          action.parameters.map);
+          action.parameters.predictionsMap);
         return Observable.forkJoin(timeSeriesObservable, predictionsObservable).pipe(
           map((results: IDateTimeValue[][]) => 
             new actions.PredictionsFetchDataSucceededAction({

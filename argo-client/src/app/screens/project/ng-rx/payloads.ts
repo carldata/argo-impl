@@ -6,7 +6,8 @@ export interface IPredictionsTabFetchDataStartedPayload {
   timeSeriesUrl: string;
   predictionsUrl: string;
   date: string;
-  map: (el: ICsvRowObject) => IDateTimeValue;
+  flowMap: (el: ICsvRowObject) => IDateTimeValue;
+  predictionsMap: (el: ICsvRowObject) => IDateTimeValue;
   projectName: string;
   channelName: string;
 }

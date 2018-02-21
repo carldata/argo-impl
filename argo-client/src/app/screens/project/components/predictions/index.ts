@@ -108,9 +108,13 @@ export class PredictionsComponent implements OnInit {
         predictionsUrl: environment.predictionsBackendUrl,
         channelName: this.selectedCsvDataSource.name,
         date: dateFns.format(new Date(this.selectedDate), environment.dateFormat),
-        map: el => <IDateTimeValue> {
+        flowMap: el => <IDateTimeValue> {
           unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
+        },
+        predictionsMap: el => <IDateTimeValue> {
+          unixTimestamp: new Date(el.time).getTime(),
+          value: parseFloat(el.value)
         }
       }));
     }
