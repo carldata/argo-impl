@@ -9,10 +9,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IHttpEndpoint, ICsvRowObject } from './contract';
 import { environment } from '@environments/environment';
 import { IGcObjects, IProject, ICsvDataSource, EnumCsvDataSourceType, IDateTimeValue } from '@backend-service/model';
+import { Store } from '@ngrx/store';
+import { IAppState } from '@app-state/.';
 
 @Injectable()
 export class HttpEndpointService implements IHttpEndpoint {
   private appName =  "argo-tests";
+  private cache: Map<string, IDateTimeValue[]> = new Map<string, IDateTimeValue[]>();
 
   constructor(private http: HttpClient) { }
 
@@ -98,11 +101,19 @@ export class HttpEndpointService implements IHttpEndpoint {
       skipEmptyLines: true,
       download: true,
       complete: (results: ParseResult) => {
-        resolve(_.map(results.data, map)
-                 .filter((value) => _.inRange(value.unixTimestamp, fromTimestamp, toTimestamp)));
+        let cacheEntry = _.map(results.data, map);
+        this.cache.set(url, cacheEntry);
+        resolve(cacheEntry);
       }
     });
-    return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
+    return Observable.from(new Promise((resolve, reject) =>
+        this.cache.has(url) ? 
+          resolve(this.cache.get(url)) :
+          Papa.parse(url, papaParseConfig(resolve))
+      ))
+      .map((series: IDateTimeValue[]) => 
+        _.filter(series, el => _.inRange(el.unixTimestamp, fromTimestamp, toTimestamp))
+      );
   }
 
   public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {

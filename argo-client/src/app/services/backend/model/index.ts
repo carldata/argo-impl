@@ -13,11 +13,6 @@ import { IDateTimeValue } from "./date-time-value";
 import { IListItem } from "./list-item";
 import { IProject } from "./project";
 
-// interface IAppState {
-//   projectsScreenState: IProjectsScreenState;
-//   projectScreenState: IProjectScreenState;
-// }
-
 export {
   IGcObject, 
   IGcObjects,
@@ -26,8 +21,4 @@ export {
   IDateTimeValue,
   IListItem,
   IProject,
-  // IProjectsScreenState,
-  // IProjectScreenState,
-  // IPredictionsTab,
-  // IAppState
 } 
