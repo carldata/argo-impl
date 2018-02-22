@@ -1,14 +1,14 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Observable } from 'rxjs';
-import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
-import { BackendService } from '../../../../services/backend';
 import { Store, select } from '@ngrx/store';
+import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
 import * as actionTypes from '../../ng-rx/action-types';
 import * as actions from '../../ng-rx/actions';
 import { IPredictionsTabFetchDataStartedPayload } from '../../ng-rx/payloads';
-import { environment } from '../../../../../environments/environment.prod';
-import { IProject, ICsvDataSource, IDateTimeValue, IAppState, EnumCsvDataSourceType, IPredictionsTab } from '@app-state/.';
+import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from '@backend-service/model';
+import { IAppState, IProjectScreenState, IPredictionsTab } from '@app-state/.';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'predictions',

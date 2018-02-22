@@ -7,7 +7,8 @@ import { BackendService } from '../../services/backend';
 import { Store, select } from '@ngrx/store';
 import { Observable } from 'rxjs/Observable';
 import { FETCH_PROJECTS_STARTED } from './ng-rx/action-types';
-import { IProject, IAppState } from '@app-state/.';
+import { IProject } from '@backend-service/model';
+import { IAppState } from '@app-state/.';
 
 @Component({
   templateUrl: './index.html'

@@ -9,7 +9,7 @@ import { ParseResult } from 'papaparse';
 import { LoaderScreenService } from '../../loader-screen/loader-screen.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { IProject, IDateTimeValue } from '@app-state/.';
+import { IDateTimeValue, IProject } from '@backend-service/model';
 
 @Injectable()
 export class BackendService {

@@ -4,7 +4,7 @@ import { Action } from '@ngrx/store';
 import * as actions from './actions';
 import * as actionsTypes from './action-types';
 import { IPredictionsTabFetchDataSucceededPayload } from './payloads';
-import { IProjectScreenState, IPredictionsTab } from '@app-state/.';
+import { IProjectScreenState, IPredictionsTab } from './state';
 
 const defaultState: IProjectScreenState = {
   predictionsTab: {

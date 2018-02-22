@@ -9,7 +9,7 @@ import { BackendService } from '../../../services/backend/index';
 import { FETCH_PROJECTS_STARTED, FETCH_PROJECTS_SUCCEEDED, FETCH_PROJECTS_FAILED } from './action-types';
 import { FetchProjectsSucceededAction } from './actions';
 import { GeneralErrorAction } from '../../../ng-rx/actions';
-import { IProject } from '@app-state/project';
+import { IProject } from '@backend-service/model';
 
 @Injectable()
 export class ProjectsScreenEffects {

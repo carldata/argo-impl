@@ -7,9 +7,8 @@ import * as Papa from 'papaparse';
 import { ParseResult } from 'papaparse';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IHttpEndpoint, ICsvRowObject } from './contract';
-import { IGcObjects } from '../models/gc-objects';
-import { environment } from '../../../../environments/environment';
-import { IProject, ICsvDataSource, EnumCsvDataSourceType, IDateTimeValue } from '@app-state/.';
+import { environment } from '@environments/environment';
+import { IGcObjects, IProject, ICsvDataSource, EnumCsvDataSourceType, IDateTimeValue } from '@backend-service/model';
 
 @Injectable()
 export class HttpEndpointService implements IHttpEndpoint {

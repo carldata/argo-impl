@@ -1,25 +1,14 @@
-
-import { ICsvDataSource, EnumCsvDataSourceType } from "./csv-data-source";
-import { IDateTimeValue } from "./date-time-value";
-import { IListItem } from "./list-item";
-import { IProject } from "./project";
-import { IProjectsScreenState } from "./projects-screen";
-import { IProjectScreenState } from "./project-screen";
-import { IPredictionsTab } from "./project-screen/predictions-tab";
+import { IProjectsScreenState } from "../screens/projects/ng-rx/state";
+import { IProjectScreenState, IPredictionsTab } from "../screens/project/ng-rx/state";
 
 interface IAppState {
   projectsScreenState: IProjectsScreenState;
   projectScreenState: IProjectScreenState;
 }
 
-export { 
-  ICsvDataSource,
-  EnumCsvDataSourceType,
-  IDateTimeValue,
-  IListItem,
-  IProject,
-  IProjectsScreenState,
+export {
+  IAppState,
   IProjectScreenState,
-  IPredictionsTab,
-  IAppState
-} 
+  IProjectsScreenState,
+  IPredictionsTab  
+}

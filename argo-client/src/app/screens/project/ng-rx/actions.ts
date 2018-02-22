@@ -1,7 +1,7 @@
 import { Action } from "@ngrx/store";
 import * as actionTypes from './action-types';
 import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from "./payloads";
-import { IProject } from "@app-state/project";
+import { IProject } from "@backend-service/model";
 
 export class SelectProjectAction implements Action {
   readonly type = actionTypes.SELECT_PROJECT;

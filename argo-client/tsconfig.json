@@ -17,7 +17,9 @@
       "dom"
     ],
     "paths": {
-      "@app-state/*": ["src/app/app-state/*"]
+      "@environments/*": ["src/environments/*"],
+      "@app-state/*": ["src/app/app-state/*"],
+      "@backend-service/*": ["src/app/services/backend/*"],
     }
   }
 }

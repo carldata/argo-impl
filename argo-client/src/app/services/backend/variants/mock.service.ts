@@ -7,8 +7,7 @@ import { ParseResult } from 'papaparse';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IHttpEndpoint, ICsvRowObject } from './contract';
-import { IProject } from '@app-state/.';
-import { IDateTimeValue } from '@app-state/date-time-value';
+import { IProject, IDateTimeValue } from '@backend-service/model';
 
 @Injectable()
 export class HttpEndpointMockService implements IHttpEndpoint {

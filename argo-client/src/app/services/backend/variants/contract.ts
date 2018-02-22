@@ -1,7 +1,6 @@
 import { InjectionToken } from '@angular/core';
 import { Observable } from "rxjs/Observable";
-import { IProject } from '@app-state/.';
-import { IDateTimeValue } from '@app-state/date-time-value';
+import { IDateTimeValue, IProject } from '@backend-service/model';
 
 export type ICsvRowObject = any;
 

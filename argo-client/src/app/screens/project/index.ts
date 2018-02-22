@@ -1,10 +1,10 @@
 import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { BackendService } from '../../services/backend';
 import { Store, select } from '@ngrx/store';
 import { SELECT_PROJECT } from './ng-rx/action-types';
-import { IProject, IAppState } from '@app-state/.';
+import { IAppState } from '@app-state/.';
+import { IProject } from '@backend-service/model';
 
 @Component({
   templateUrl: './index.html',

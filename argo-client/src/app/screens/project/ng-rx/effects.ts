@@ -7,10 +7,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { BackendService } from '../../../services/backend/index';
 import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
 import { GeneralErrorAction } from '../../../ng-rx/actions';
-import { IDateTimeValue } from '@app-state/date-time-value';
+import { BackendService } from '@backend-service/.';
+import { IDateTimeValue } from '@backend-service/model';
 
 @Injectable()
 export class ProjectScreenEffects {

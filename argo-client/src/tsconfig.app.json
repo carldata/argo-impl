@@ -6,7 +6,9 @@
     "module": "es2015",
     "types": [],
     "paths": {
-      "@app-state/*": ["app/app-state/*"]
+      "@environments/*": ["environments/*"],
+      "@app-state/*": ["app/app-state/*"],
+      "@backend-service/*": ["app/services/backend/*"]
     }
   },
   "exclude": [
