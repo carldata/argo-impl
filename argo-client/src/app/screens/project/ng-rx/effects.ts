@@ -1,3 +1,4 @@
+import * as dateFns from 'date-fns';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as actionTypes from './action-types';
@@ -11,6 +12,7 @@ import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStart
 import { GeneralErrorAction } from '../../../ng-rx/actions';
 import { BackendService } from '@backend-service/.';
 import { IDateTimeValue } from '@backend-service/model';
+import { environment } from '@environments/environment';
 
 @Injectable()
 export class ProjectScreenEffects {
@@ -24,7 +26,8 @@ export class ProjectScreenEffects {
       ofType(actionTypes.PREDICTIONS_TAB_FETCH_DATA_STARTED),
       mergeMap((action: actions.PredictionsFetchDataStartedAction) => { 
         const timeSeriesObservable = this.backendService.getTimeSeries(
-          action.parameters.timeSeriesUrl, 
+          action.parameters.timeSeriesUrl,
+          dateFns.format(dateFns.addDays(action.parameters.date, -3), environment.dateFormat),
           action.parameters.date, 
           action.parameters.flowMap);
         const predictionsObservable = this.backendService.getPrediction(

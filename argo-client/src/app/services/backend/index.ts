@@ -57,7 +57,7 @@ export class BackendService {
     return this.wrapObservable(this.httpEndpoint.getPrediction(url, projectName, channelName, date, map));
   }
 
-  public getTimeSeries(url: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, date, map));
+  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, dateFrom, dateTo, map));
   }
 }
