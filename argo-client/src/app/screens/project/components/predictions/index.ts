@@ -28,8 +28,8 @@ export class PredictionsComponent implements OnInit {
       height: 350,
       margin: {
         top: 20,
-        right: 20,
-        bottom: 40,
+        right: 55,
+        bottom: 55,
         left: 55
       },
       useInteractiveGuideline: false,
@@ -38,7 +38,7 @@ export class PredictionsComponent implements OnInit {
       xAxis: {
         axisLabel: "Time",
         staggerLabels: true,
-        tickFormat: (tick) => { return dateFns.format(tick, "MMM-DD HH:mm"); }
+        tickFormat: (tick) => { return dateFns.format(tick, environment.dateTimeFormat); }
       },
       yAxis: {
         axisLabel: "Value",
