@@ -1,5 +1,4 @@
-import { IDateTimeValue } from "../../../model/date-time-value";
-import { IProject } from "../../../model/project";
+import { IDateTimeValue, IProject } from "@backend-service/model";
 
 export interface IPredictionsTab {
   selectedFlowChannel: string;
@@ -10,5 +9,5 @@ export interface IPredictionsTab {
 
 export interface IProjectScreenState {
   project: IProject;
-  predictionsTab: IPredictionsTab;  
+  predictionsTab: IPredictionsTab;
 }

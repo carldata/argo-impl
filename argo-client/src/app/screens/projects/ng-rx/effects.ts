@@ -6,10 +6,10 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { BackendService } from '../../../services/backend/index';
-import { IProject } from '../../../model/project';
 import { FETCH_PROJECTS_STARTED, FETCH_PROJECTS_SUCCEEDED, FETCH_PROJECTS_FAILED } from './action-types';
 import { FetchProjectsSucceededAction } from './actions';
 import { GeneralErrorAction } from '../../../ng-rx/actions';
+import { IProject } from '@backend-service/model';
 
 @Injectable()
 export class ProjectsScreenEffects {

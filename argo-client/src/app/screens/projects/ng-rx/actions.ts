@@ -1,6 +1,6 @@
 import { Action } from "@ngrx/store";
 import * as actionTypes from './action-types';
-import { IProject } from "../../../model/project";
+import { IProject } from "@backend-service/model";
 
 export class FetchProjectsStartedAction implements Action {
   readonly type = actionTypes.FETCH_PROJECTS_STARTED

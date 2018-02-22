@@ -1,18 +1,14 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Observable } from 'rxjs';
-import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
-import { IDateTimeValue } from '../../../../model/date-time-value';
-import { IProject } from '../../../../model/project';
-import { EnumCsvDataSourceType, ICsvDataSource } from '../../../../model/csv-data-source';
-import { BackendService } from '../../../../services/backend';
 import { Store, select } from '@ngrx/store';
-import { IAppState } from '../../../../model/app-state';
+import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
 import * as actionTypes from '../../ng-rx/action-types';
 import * as actions from '../../ng-rx/actions';
-import { IPredictionsTab } from '../../ng-rx/state';
 import { IPredictionsTabFetchDataStartedPayload } from '../../ng-rx/payloads';
-import { environment } from '../../../../../environments/environment.prod';
+import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from '@backend-service/model';
+import { IAppState, IProjectScreenState, IPredictionsTab } from '@app-state/.';
+import { environment } from '@environments/environment';
 
 @Component({
   selector: 'predictions',
@@ -103,14 +99,19 @@ export class PredictionsComponent implements OnInit {
   onLoadTimeSeries() {
     if (_.isString(this.selectedCsvDataSource.url)) {
       this.store.dispatch(new actions.PredictionsFetchDataStartedAction({ 
+        projectName: this.project.name,
+        timeSeriesUrl: this.selectedCsvDataSource.url,
+        predictionsUrl: environment.predictionsBackendUrl,
         channelName: this.selectedCsvDataSource.name,
         date: dateFns.format(new Date(this.selectedDate), environment.dateFormat),
-        mapRawElement: el => <IDateTimeValue> {
+        flowMap: el => <IDateTimeValue> {
           unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         },
-        projectName: this.project.name,
-        timeSeriesUrl: this.selectedCsvDataSource.url
+        predictionsMap: el => <IDateTimeValue> {
+          unixTimestamp: new Date(el.time).getTime(),
+          value: parseFloat(el.value)
+        }
       }));
     }
   }

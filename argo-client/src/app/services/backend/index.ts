@@ -4,14 +4,12 @@ import * as Papa from 'papaparse';
 import 'rxjs/Rx';
 import { Observable } from 'rxjs/Rx';
 import { Injectable, Inject } from '@angular/core';
-import { IListItem } from '../../model/list-item';
-import { IProject } from '../../model/project';
-import { IHttpEndpoint, HTTP_ENDPOINT } from './variants/contract';
+import { IHttpEndpoint, HTTP_ENDPOINT, ICsvRowObject } from './variants/contract';
 import { ParseResult } from 'papaparse';
-import { IDateTimeValue } from '../../model/date-time-value';
 import { LoaderScreenService } from '../../loader-screen/loader-screen.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { IDateTimeValue, IProject } from '@backend-service/model';
 
 @Injectable()
 export class BackendService {
@@ -55,11 +53,11 @@ export class BackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  public getPrediction(projectName: string, channelName: string, date: string): Observable<IDateTimeValue[]> {
-    return this.wrapObservable(this.httpEndpoint.getPrediction(projectName, channelName, date));
+  public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    return this.wrapObservable(this.httpEndpoint.getPrediction(url, projectName, channelName, date, map));
   }
 
-  public getTimeSeries(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, date, mapRawElement));
+  public getTimeSeries(url: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, date, map));
   }
 }

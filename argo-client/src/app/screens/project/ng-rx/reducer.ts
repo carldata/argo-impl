@@ -3,10 +3,8 @@ import * as dateFns from 'date-fns';
 import { Action } from '@ngrx/store';
 import * as actions from './actions';
 import * as actionsTypes from './action-types';
-import { IProjectScreenState, IPredictionsTab } from './state';
-import { IDateTimeValue } from '../../../model/date-time-value';
-import { IProject } from '../../../model/project';
 import { IPredictionsTabFetchDataSucceededPayload } from './payloads';
+import { IProjectScreenState, IPredictionsTab } from './state';
 
 const defaultState: IProjectScreenState = {
   predictionsTab: {

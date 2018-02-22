@@ -1,0 +1,1 @@
+Contains structures commonly received from backend and reusable by Redux Store (screen/tabs state).

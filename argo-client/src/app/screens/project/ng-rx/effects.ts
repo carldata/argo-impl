@@ -7,11 +7,10 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { BackendService } from '../../../services/backend/index';
-import { IProject } from '../../../model/project';
-import { IDateTimeValue } from '../../../model/date-time-value';
 import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
 import { GeneralErrorAction } from '../../../ng-rx/actions';
+import { BackendService } from '@backend-service/.';
+import { IDateTimeValue } from '@backend-service/model';
 
 @Injectable()
 export class ProjectScreenEffects {
@@ -27,11 +26,13 @@ export class ProjectScreenEffects {
         const timeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.timeSeriesUrl, 
           action.parameters.date, 
-          action.parameters.mapRawElement);
+          action.parameters.flowMap);
         const predictionsObservable = this.backendService.getPrediction(
+          action.parameters.predictionsUrl,
           action.parameters.projectName, 
           action.parameters.channelName,
-          action.parameters.date);
+          action.parameters.date,
+          action.parameters.predictionsMap);
         return Observable.forkJoin(timeSeriesObservable, predictionsObservable).pipe(
           map((results: IDateTimeValue[][]) => 
             new actions.PredictionsFetchDataSucceededAction({
