@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 import * as Papa from 'papaparse';
 import { ParseResult } from 'papaparse';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { IHttpEndpoint } from './contract';
+import { IHttpEndpoint, ICsvRowObject } from './contract';
 import { IGcObjects } from '../models/gc-objects';
 import { IProject } from '../../../model/project';
 import { IListItem } from '../../../model/list-item';
@@ -86,7 +86,7 @@ export class HttpEndpointService implements IHttpEndpoint {
 
   public getProjects(): Observable<IProject[]> {
     return this.http
-      .get<IGcObjects>(`${environment.googleCloudApiProjectInfo}`)
+      .get<IGcObjects>(`${environment.googleCloudApiProjectInfoUrl}`)
       .map<IGcObjects, IProject[]>((objects: IGcObjects) => this.fetchProjectsInGoogleCloudStorageObjectList(objects))
       .switchMap<IProject[], IProject[]>((projects: IProject[]) =>
         Observable.forkJoin(
@@ -94,7 +94,7 @@ export class HttpEndpointService implements IHttpEndpoint {
         ));
   }
 
-  public getTimeSeries(url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> {
+  public getTimeSeries(url: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
     let fromTimestamp = dateFns.getTime(new Date(date));
     let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
     let papaParseConfig = (resolve) => _.extend({}, {
@@ -102,14 +102,25 @@ export class HttpEndpointService implements IHttpEndpoint {
       skipEmptyLines: true,
       download: true,
       complete: (results: ParseResult) => {
-        resolve(_.map(results.data, mapRawElement)
+        resolve(_.map(results.data, map)
                  .filter((value) => _.inRange(value.unixTimestamp, fromTimestamp, toTimestamp)));
       }
     });
     return Observable.from(new Promise((resolve, reject) => Papa.parse(url, papaParseConfig(resolve))));
   }
 
-  public getPrediction(projectName: string, channelName: string, date: string): Observable<IDateTimeValue[]> {
-    return Observable.of([]);
+  public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    let targetUrl = `${url}/${projectName}?flow=${channelName}&day=${date}`;
+    let fromTimestamp = dateFns.getTime(new Date(date));
+    let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
+    let papaParseConfig = (resolve) => _.extend({}, {
+      header: true,
+      skipEmptyLines: true,
+      download: true,
+      complete: (results: ParseResult) => 
+        resolve(_.map(results.data, map)
+        .filter((value) => _.inRange(value.unixTimestamp, fromTimestamp, toTimestamp)))
+    });
+    return Observable.from(new Promise((resolve, reject) => Papa.parse(targetUrl, papaParseConfig(resolve))));
   }
 }

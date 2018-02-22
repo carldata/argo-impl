@@ -103,14 +103,19 @@ export class PredictionsComponent implements OnInit {
   onLoadTimeSeries() {
     if (_.isString(this.selectedCsvDataSource.url)) {
       this.store.dispatch(new actions.PredictionsFetchDataStartedAction({ 
+        projectName: this.project.name,
+        timeSeriesUrl: this.selectedCsvDataSource.url,
+        predictionsUrl: environment.predictionsBackendUrl,
         channelName: this.selectedCsvDataSource.name,
         date: dateFns.format(new Date(this.selectedDate), environment.dateFormat),
-        mapRawElement: el => <IDateTimeValue> {
+        flowMap: el => <IDateTimeValue> {
           unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         },
-        projectName: this.project.name,
-        timeSeriesUrl: this.selectedCsvDataSource.url
+        predictionsMap: el => <IDateTimeValue> {
+          unixTimestamp: new Date(el.time).getTime(),
+          value: parseFloat(el.value)
+        }
       }));
     }
   }
