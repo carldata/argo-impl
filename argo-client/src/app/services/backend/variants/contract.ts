@@ -6,7 +6,7 @@ export type ICsvRowObject = any;
 
 export interface IHttpEndpoint {
   getProjects(): Observable<IProject[]>;
-  getTimeSeries(url: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]>
+  getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]>
   getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]>;
 }
 

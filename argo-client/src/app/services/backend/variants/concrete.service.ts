@@ -93,9 +93,9 @@ export class HttpEndpointService implements IHttpEndpoint {
         ));
   }
 
-  public getTimeSeries(url: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    let fromTimestamp = dateFns.getTime(new Date(date));
-    let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
+  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    let fromTimestamp = dateFns.getTime(new Date(dateFrom));
+    let toTimestamp = dateFns.getTime(new Date(dateTo));
     let papaParseConfig = (resolve) => _.extend({}, {
       header: true,
       skipEmptyLines: true,

@@ -26,14 +26,14 @@ export class HttpEndpointMockService implements IHttpEndpoint {
           })]
         )));
 
-  public getTimeSeries = (url: string, date: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> =>
+  public getTimeSeries = (url: string, dateFrom: string, dateTo: string, mapRawElement: (el: any) => IDateTimeValue): Observable<IDateTimeValue[]> =>
     this.http
       .get<Object[]>("assets/json/mock-empty-array.json")
       .map<Object[], IDateTimeValue[]>(() => {
         let result = [];
-        let referenceDate = new Date(dateFns.startOfDay(date));
+        let referenceDate = new Date(dateFns.startOfDay(dateFrom));
         let referenceValue = _.random(-50, 50);
-        const endDate = new Date(dateFns.startOfDay(dateFns.addDays(date, 1)));
+        const endDate = new Date(dateFns.endOfDay(dateTo));
         while (dateFns.isBefore(referenceDate, endDate)) {
           result.push(<IDateTimeValue> {
             value: referenceValue + 20-_.random(10),
