@@ -57,6 +57,10 @@ export class BackendService {
     return this.wrapObservable(this.httpEndpoint.getPrediction(url, projectName, channelName, date, map));
   }
 
+  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    return this.wrapObservable(Observable.of([]));
+  }
+
   public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
     return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, dateFrom, dateTo, map));
   }

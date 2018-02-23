@@ -1,46 +1,45 @@
 import * as dateFns from 'date-fns';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import * as actionTypes from './action-types';
-import * as actions from './actions';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
-import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
+import * as actionTypes from './action-types';
+import * as actions from './actions';
 import { BackendService } from '@backend-service/.';
 import { IDateTimeValue } from '@backend-service/model';
 import { environment } from '@environments/environment';
 import { GeneralErrorAction } from '@common/ng-rx/actions';
 
 @Injectable()
-export class ProjectScreenEffects {
+export class ProjectScreenAnomaliesTabEffects {
   constructor(
     private backendService: BackendService,
     private actions$: Actions
   ) { }
 
-  @Effect() getTimeSeries$: Observable<actions.PredictionsFetchDataSucceededAction|GeneralErrorAction> = this.actions$
+  @Effect() getTimeSeries$: Observable<actions.AnomaliesFetchDataSucceededAction|GeneralErrorAction> = this.actions$
     .pipe(
-      ofType(actionTypes.PREDICTIONS_TAB_FETCH_DATA_STARTED),
-      mergeMap((action: actions.PredictionsFetchDataStartedAction) => { 
+      ofType(actionTypes.ANOMALIES_TAB_FETCH_DATA_STARTED),
+      mergeMap((action: actions.AnomaliesFetchDataStartedAction) => { 
         const timeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.timeSeriesUrl,
-          dateFns.format(dateFns.addDays(action.parameters.date, -2), environment.dateFormat),
-          action.parameters.date, 
+          action.parameters.dateFrom, 
+          action.parameters.dateTo, 
           action.parameters.flowMap);
-        const predictionsObservable = this.backendService.getPrediction(
-          action.parameters.predictionsUrl,
+        const anomaliesObservable = this.backendService.getPrediction(
+          action.parameters.anomaliesUrl,
           action.parameters.projectName, 
           action.parameters.channelName,
-          action.parameters.date,
-          action.parameters.predictionsMap);
-        return Observable.forkJoin(timeSeriesObservable, predictionsObservable).pipe(
+          action.parameters.dateFrom,
+          action.parameters.anomaliesMap);
+        return Observable.forkJoin(timeSeriesObservable, anomaliesObservable).pipe(
           map((results: IDateTimeValue[][]) => 
-            new actions.PredictionsFetchDataSucceededAction({
+            new actions.AnomaliesFetchDataSucceededAction({
               measuredFlow: results[0],
-              predictionFlow: results[1]
+              anomalies: results[1]
             })
           ),
           catchError(e => of(new GeneralErrorAction(e)))

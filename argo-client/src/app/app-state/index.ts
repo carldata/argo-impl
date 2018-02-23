@@ -1,5 +1,5 @@
 import { IProjectsScreenState } from "../screens/projects/ng-rx/state";
-import { IProjectScreenState, IPredictionsTab } from "../screens/project/ng-rx/state";
+import { IProjectScreenState } from "../screens/project/ng-rx/state";
 
 interface IAppState {
   projectsScreenState: IProjectsScreenState;
@@ -9,6 +9,5 @@ interface IAppState {
 export {
   IAppState,
   IProjectScreenState,
-  IProjectsScreenState,
-  IPredictionsTab  
+  IProjectsScreenState
 }
