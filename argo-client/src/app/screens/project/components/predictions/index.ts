@@ -16,7 +16,7 @@ import { environment } from '@environments/environment';
   styleUrls: ['./index.scss'],
 })
 export class PredictionsComponent implements OnInit {
-  @Input() project: IProject = <IProject> { csvDataSources: [] };
+  public project: IProject = <IProject> { csvDataSources: [] };
   public flowChannels: ICsvDataSource[] = [];
   public selectedCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
   public selectedDate: string = dateFns.format(new Date(), "YYYY-MM-DD");
@@ -60,20 +60,23 @@ export class PredictionsComponent implements OnInit {
 
   ngOnInit() {
     this.updateChartSize();
-    this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
     this.store
-      .pipe(select((store) => store.projectScreenState.predictionsTab ))
-      .subscribe((tabState: IPredictionsTab) => {
-        this.selectedDate = tabState.selectedDate;
-        this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == tabState.selectedFlowChannel);
+      .pipe(select((store) => store.projectScreenState ))
+      .subscribe((screenState: IProjectScreenState) => {
+        if (!_.isObject(screenState.project))
+          return;
+        this.project = screenState.project;
+        this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
+        this.selectedDate = screenState.predictionsTab.selectedDate;
+        this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == screenState.predictionsTab.selectedFlowChannel);
         if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
           this.selectedCsvDataSource = _.first(this.flowChannels);
         this.chartData = [{
-          values: tabState.flow,
+          values: screenState.predictionsTab.flow,
           key: 'Flow',
           color: 'blue'
         },{
-          values: tabState.predictions,
+          values: screenState.predictionsTab.predictions,
           key: 'Prediction',
           color: 'orange'
         }]
