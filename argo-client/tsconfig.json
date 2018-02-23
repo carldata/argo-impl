@@ -18,6 +18,7 @@
     ],
     "paths": {
       "@environments/*": ["src/environments/*"],
+      "@common/*": ["src/app/common/*"],
       "@app-state/*": ["src/app/app-state/*"],
       "@backend-service/*": ["src/app/services/backend/*"],
     }

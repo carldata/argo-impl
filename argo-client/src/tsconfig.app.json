@@ -7,6 +7,7 @@
     "types": [],
     "paths": {
       "@environments/*": ["environments/*"],
+      "@common/*": ["app/common/*"],
       "@app-state/*": ["app/app-state/*"],
       "@backend-service/*": ["app/services/backend/*"]
     }

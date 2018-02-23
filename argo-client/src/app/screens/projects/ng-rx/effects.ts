@@ -8,8 +8,8 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { BackendService } from '../../../services/backend/index';
 import { FETCH_PROJECTS_STARTED, FETCH_PROJECTS_SUCCEEDED, FETCH_PROJECTS_FAILED } from './action-types';
 import { FetchProjectsSucceededAction } from './actions';
-import { GeneralErrorAction } from '../../../ng-rx/actions';
 import { IProject } from '@backend-service/model';
+import { GeneralErrorAction } from '@common/ng-rx/actions';
 
 @Injectable()
 export class ProjectsScreenEffects {

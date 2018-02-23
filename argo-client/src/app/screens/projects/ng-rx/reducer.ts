@@ -5,7 +5,7 @@ import { FetchProjectsSucceededAction } from './actions';
 import { IProjectsScreenState } from '@app-state/.';
 
 const defaultState: IProjectsScreenState = {
-  projects: []
+  projects: null
 } 
 
 export function projectsScreenReducer(state: IProjectsScreenState = defaultState, action: FetchProjectsSucceededAction): IProjectsScreenState {

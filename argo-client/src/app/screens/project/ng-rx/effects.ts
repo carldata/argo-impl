@@ -9,10 +9,10 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
-import { GeneralErrorAction } from '../../../ng-rx/actions';
 import { BackendService } from '@backend-service/.';
 import { IDateTimeValue } from '@backend-service/model';
 import { environment } from '@environments/environment';
+import { GeneralErrorAction } from '@common/ng-rx/actions';
 
 @Injectable()
 export class ProjectScreenEffects {
