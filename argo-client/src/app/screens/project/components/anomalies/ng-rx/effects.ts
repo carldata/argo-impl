@@ -29,11 +29,12 @@ export class ProjectScreenAnomaliesTabEffects {
           action.parameters.dateFrom, 
           action.parameters.dateTo, 
           action.parameters.flowMap);
-        const anomaliesObservable = this.backendService.getPrediction(
+        const anomaliesObservable = this.backendService.getAnomalies(
           action.parameters.anomaliesUrl,
           action.parameters.projectName, 
           action.parameters.channelName,
-          action.parameters.dateFrom,
+          action.parameters.dateFrom, 
+          action.parameters.dateTo, 
           action.parameters.anomaliesMap);
         return Observable.forkJoin(timeSeriesObservable, anomaliesObservable).pipe(
           map((results: IDateTimeValue[][]) => 

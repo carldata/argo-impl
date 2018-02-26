@@ -130,4 +130,8 @@ export class HttpEndpointService implements IHttpEndpoint {
     });
     return Observable.from(new Promise((resolve, reject) => Papa.parse(targetUrl, papaParseConfig(resolve))));
   }
+
+  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+    return Observable.of([]);
+  }
 }
