@@ -4,11 +4,11 @@
     <div ngbDropdown class="d-inline-block">
       <button class="btn btn-primary" id="ddChannels" name="ddChannels" ngbDropdownToggle>{{selectedCsvDataSource.name}}</button>
       <div ngbDropdownMenu aria-labelledby="ddChannels">
-        <button *ngFor="let ch of flowChannels" class="dropdown-item" id="{{ch.name}}" (click)="onDropDownClick(ch.name)" >{{ch.name}}</button>
+        <button *ngFor="let ch of flowChannels" class="dropdown-item" id="{{ch.name}}" (click)="onFlowDropDownClick(ch.name)" >{{ch.name}}</button>
       </div>
     </div>
-    <label for="txtInputChannelId">Date:</label>
-    <input #date type="date" class="form-control" name="selectedDate" [(ngModel)]="selectedDate" (change)="onSelectedDateChanged(date.value)" placeholder="YYYY-MM-DD" />
+    <label for="txtDate">Date:</label>
+    <input #txtDate type="date" class="form-control" name="txtDate" [(ngModel)]="date" (change)="onDateChanged(txtDate.value)" placeholder="YYYY-MM-DD" />
     <button type="button" class="btn btn-success" (click)="onLoadTimeSeries()">Load Time Series</button>
   </div>
   <div class="form-inline">

@@ -28,12 +28,14 @@ import { FormatPipe } from './pipes/format';
 import { ProjectThumbnailComponent } from './components/project-thumbnail';
 import { ProjectScreen } from './screens/project';
 import { PredictionsComponent } from './screens/project/components/predictions';
+import { AnomaliesComponent } from './screens/project/components/anomalies/';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { projectsScreenReducer } from './screens/projects/ng-rx/reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { IAppState } from '@app-state/.';
 import { ProjectsScreenEffects } from './screens/projects/ng-rx/effects';
-import { ProjectScreenEffects } from './screens/project/ng-rx/effects';
+import { ProjectScreenPredictionsTabEffects } from './screens/project/components/predictions/ng-rx/effects';
+import { ProjectScreenAnomaliesTabEffects } from './screens/project/components/anomalies/ng-rx/effects';
 import { projectScreenReducer } from './screens/project/ng-rx/reducer';
 
 @NgModule({
@@ -48,6 +50,7 @@ import { projectScreenReducer } from './screens/project/ng-rx/reducer';
     ProjectScreen,
     PredictionsComponent,
     PageNotFoundComponent,
+    AnomaliesComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,7 +65,7 @@ import { projectScreenReducer } from './screens/project/ng-rx/reducer';
       projectsScreenState: projectsScreenReducer,
       projectScreenState: projectScreenReducer
     }),
-    EffectsModule.forRoot([ProjectsScreenEffects, ProjectScreenEffects]),
+    EffectsModule.forRoot([ProjectsScreenEffects, ProjectScreenPredictionsTabEffects, ProjectScreenAnomaliesTabEffects]),
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
       logOnly: environment.production // Restrict extension to log-only mode

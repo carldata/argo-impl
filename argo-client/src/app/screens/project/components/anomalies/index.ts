@@ -1,22 +1,21 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import { Observable } from 'rxjs';
-import { Store, select } from '@ngrx/store';
-import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
-import * as actions from './ng-rx/actions';
-import { IPredictionsTabFetchDataStartedPayload } from './ng-rx/payloads';
-import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from '@backend-service/model';
-import { IAppState, IProjectScreenState } from '@app-state/.';
+import { Component, OnInit } from '@angular/core';
 import { environment } from '@environments/environment';
+import { Store, select } from '@ngrx/store';
+import { IAppState, IProjectScreenState } from '@app-state/.';
 import { ComponentWithChart } from '../component-with-chart';
+import { EnumCsvDataSourceType, IDateTimeValue } from '@backend-service/model';
+import * as actions from './ng-rx/actions';
 
 @Component({
-  selector: 'predictions-tab',
+  selector: 'anomalies-tab',
   templateUrl: './index.html',
-  styleUrls: ['./index.scss'],
+  styleUrls: ['./index.scss']
 })
-export class PredictionsComponent extends ComponentWithChart implements OnInit {
-  public date: string = dateFns.format(new Date(), environment.dateFormat);
+export class AnomaliesComponent extends ComponentWithChart implements OnInit {
+  public dateFrom: string = dateFns.format(new Date(), environment.dateFormat);
+  public dateTo: string = dateFns.format(new Date(), environment.dateFormat);
   
   constructor(private store: Store<IAppState>) {
     super();
@@ -31,46 +30,48 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
           return;
         this.project = screenState.project;
         this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
-        this.date = screenState.predictionsTab.date;
-        this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == screenState.predictionsTab.flowChannel);
+        this.dateFrom = screenState.anomaliesTab.dateFrom;
+        this.dateTo = screenState.anomaliesTab.dateTo;
+        this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == screenState.anomaliesTab.flowChannel);
         if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
           this.selectedCsvDataSource = _.first(this.flowChannels);
         this.chartData = [{
-          values: screenState.predictionsTab.flow,
+          values: screenState.anomaliesTab.flow,
           key: 'Flow',
           color: 'blue'
         },{
-          values: screenState.predictionsTab.predictions,
-          key: 'Prediction',
-          color: 'orange'
+          values: screenState.anomaliesTab.anomalies,
+          key: 'Anomalies',
+          color: 'red'
         }]
       });
   }
-
-  onDateChanged(date: string) {
-    this.store.dispatch(new actions.PredictionsDateChangedAction(date));
-  }
-
+  
   onFlowDropDownClick(channelName: string) {
     super.onFlowDropDownClick(channelName);
     if (_.isObject(this.selectedCsvDataSource)) {
-      this.store.dispatch(new actions.PredictionsFlowChannelChangedAction(channelName));
+      this.store.dispatch(new actions.AnomaliesFlowChannelChangedAction(channelName));
     }
+  }
+
+  onDateFromToChanged(dateFrom: string, dateTo: string) {
+    this.store.dispatch(new actions.AnomaliesDateFromToChangedAction(dateFrom, dateTo));
   }
 
   onLoadTimeSeries() {
     if (_.isString(this.selectedCsvDataSource.url)) {
-      this.store.dispatch(new actions.PredictionsFetchDataStartedAction({ 
+      this.store.dispatch(new actions.AnomaliesFetchDataStartedAction({ 
         projectName: this.project.name,
         timeSeriesUrl: this.selectedCsvDataSource.url,
-        predictionsUrl: environment.predictionsBackendUrl,
+        anomaliesUrl: environment.anomaliesBackendUrl,
         channelName: this.selectedCsvDataSource.name,
-        date: dateFns.format(new Date(this.date), environment.dateFormat),
+        dateFrom: dateFns.format(new Date(this.dateFrom), environment.dateFormat),
+        dateTo: dateFns.format(new Date(this.dateTo), environment.dateFormat),
         flowMap: el => <IDateTimeValue> {
           unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         },
-        predictionsMap: el => <IDateTimeValue> {
+        anomaliesMap: el => <IDateTimeValue> {
           unixTimestamp: new Date(el.time).getTime(),
           value: parseFloat(el.value)
         }

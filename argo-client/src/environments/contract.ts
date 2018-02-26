@@ -4,5 +4,6 @@ export interface IEnvironmentContract {
   dateFormat: string;
   dateTimeFormat: string;
   googleCloudApiProjectInfoUrl: string; 
-  predictionsBackendUrl: string; 
+  predictionsBackendUrl: string;
+  anomaliesBackendUrl: string;
 }
