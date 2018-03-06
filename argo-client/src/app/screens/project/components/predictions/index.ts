@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { Component, OnInit, Input, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Input, Inject, HostListener, AfterViewInit, AfterViewChecked, SimpleChanges, OnChanges } from '@angular/core';
 import * as actions from './ng-rx/actions';
 import { IPredictionsTabFetchDataStartedPayload } from './ng-rx/payloads';
 import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from '@backend-service/model';
@@ -23,7 +23,6 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
   }
 
   ngOnInit() {
-    super.updateChartSize();
     this.store
       .pipe(select((store) => store.projectScreenState ))
       .subscribe((screenState: IProjectScreenState) => {
@@ -36,14 +35,15 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
         if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
           this.selectedCsvDataSource = _.first(this.flowChannels);
         this.chartData = [{
-          values: screenState.predictionsTab.flow,
-          key: 'Flow',
+          points: screenState.predictionsTab.flow,
+          name: 'Flow',
           color: 'blue'
         },{
-          values: screenState.predictionsTab.predictions,
-          key: 'Prediction',
+          points: screenState.predictionsTab.predictions,
+          name: 'Prediction',
           color: 'orange'
-        }]
+        }];
+        this.refreshChart();
       });
   }
 
@@ -67,11 +67,11 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
         channelName: this.selectedCsvDataSource.name,
         date: dateFns.format(new Date(this.date), environment.dateFormat),
         flowMap: el => <IDateTimeValue> {
-          unixTimestamp: new Date(el.time).getTime(),
+          unix: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         },
         predictionsMap: el => <IDateTimeValue> {
-          unixTimestamp: new Date(el.time).getTime(),
+          unix: new Date(el.time).getTime(),
           value: parseFloat(el.value)
         }
       }));

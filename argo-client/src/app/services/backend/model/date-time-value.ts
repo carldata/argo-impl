@@ -1,4 +1,4 @@
 export interface IDateTimeValue {
-  unixTimestamp: number;
+  unix: number;
   value: number;
 }

@@ -19,7 +19,9 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
-        "sass/styles.scss"
+        "sass/styles.scss",
+        "../node_modules/time-series-scroller/lib/out/sass/hp-slider.scss",
+        "../node_modules/time-series-scroller/lib/out/sass/hp-time-series-chart.scss"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

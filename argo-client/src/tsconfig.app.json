@@ -6,11 +6,21 @@
     "module": "es2015",
     "types": [],
     "paths": {
-      "@environments/*": ["environments/*"],
-      "@common/*": ["app/common/*"],
-      "@app-state/*": ["app/app-state/*"],
-      "@backend-service/*": ["app/services/backend/*"]
-    }
+      "@environments/*": [
+        "environments/*"
+      ],
+      "@common/*": [
+        "app/common/*"
+      ],
+      "@app-state/*": [
+        "app/app-state/*"
+      ],
+      "@backend-service/*": [
+        "app/services/backend/*"
+      ]
+    },
+    "jsx": "react",
+    "jsxFactory": "React.createElement"
   },
   "exclude": [
     "test.ts",

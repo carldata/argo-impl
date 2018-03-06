@@ -112,7 +112,7 @@ export class HttpEndpointService implements IHttpEndpoint {
           Papa.parse(url, papaParseConfig(resolve))
       ))
       .map((series: IDateTimeValue[]) => 
-        _.filter(series, el => _.inRange(el.unixTimestamp, fromTimestamp, toTimestamp))
+        _.filter(series, el => _.inRange(el.unix, fromTimestamp, toTimestamp))
       );
   }
 
@@ -126,7 +126,7 @@ export class HttpEndpointService implements IHttpEndpoint {
       download: true,
       complete: (results: ParseResult) => 
         resolve(_.map(results.data, map)
-        .filter((value) => _.inRange(value.unixTimestamp, fromTimestamp, toTimestamp)))
+        .filter((value) => _.inRange(value.unix, fromTimestamp, toTimestamp)))
     });
     return Observable.from(new Promise((resolve, reject) => Papa.parse(targetUrl, papaParseConfig(resolve))));
   }

@@ -37,7 +37,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
         while (dateFns.isBefore(referenceDate, endDate)) {
           result.push(<IDateTimeValue> {
             value: referenceValue + 20-_.random(10),
-            unixTimestamp: referenceDate.getTime()
+            unix: referenceDate.getTime()
           });
           referenceValue = referenceValue + 10-_.random(20);
           referenceDate = dateFns.addMinutes(referenceDate, 5);
@@ -56,7 +56,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
         while (dateFns.isBefore(referenceDate, endDate)) {
           result.push(<IDateTimeValue> {
             value: referenceValue + 20-_.random(10),
-            unixTimestamp: referenceDate.getTime()
+            unix: referenceDate.getTime()
           });
           referenceValue = referenceValue + 10-_.random(20);
           referenceDate = dateFns.addMinutes(referenceDate, 5);
@@ -75,7 +75,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
       while (dateFns.isBefore(referenceDate, endDate)) {
         result.push(<IDateTimeValue> {
           value: _.random(0, 10) <= 2 ? referenceValue + 20-_.random(10) : null,
-          unixTimestamp: referenceDate.getTime()
+          unix: referenceDate.getTime()
         });
         referenceValue = referenceValue + 10-_.random(20);
         referenceDate = dateFns.addMinutes(referenceDate, 5);

@@ -8,6 +8,8 @@
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
     "target": "es5",
     "typeRoots": [
       "node_modules/@types"
