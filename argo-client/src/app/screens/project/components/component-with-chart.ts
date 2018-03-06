@@ -11,13 +11,20 @@ import * as timeSeriesChartScss from 'time-series-scroller/lib/out/sass/hp-time-
 
 
 export abstract class ComponentWithChart implements OnInit {
+  private divChart: string;
   public project: IProject = <IProject> { csvDataSources: [] };
   public flowChannels: ICsvDataSource[] = [];
   public selectedCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
   protected chartDimensions = { width: 0, height: 0 };
   protected chartData: IExternalSourceTimeSeries[];
 
-  protected renderChart() {
+  constructor(divChart) {
+    this.divChart = divChart;
+  }
+
+  private renderChart() {
+    if (!_.isObject(document.getElementById(this.divChart)))
+      return;
     ReactDOM.render(
       React.createElement(HpTimeSeriesScroller, <IHpTimeSeriesScrollerProps> {
         timeSeriesChartScss: _.extend(convertHpTimeSeriesChartScss(timeSeriesChartScss), <IHpTimeSeriesChartScss> {
@@ -32,7 +39,7 @@ export abstract class ComponentWithChart implements OnInit {
           payload: this.chartData
         })
       }),
-      document.getElementById("divChart"));
+      document.getElementById(this.divChart));
   }
 
   protected refreshChart() {
@@ -42,7 +49,6 @@ export abstract class ComponentWithChart implements OnInit {
   }
 
   public ngOnInit() {
-    this.refreshChart();
   }
   
   @HostListener('window:resize')

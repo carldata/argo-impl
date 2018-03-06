@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
-import { Component, OnInit, Input, Inject, HostListener, AfterViewInit, AfterViewChecked, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Inject, HostListener, AfterViewInit, AfterViewChecked, SimpleChanges, OnChanges, AfterContentChecked, AfterContentInit } from '@angular/core';
 import * as actions from './ng-rx/actions';
 import { IPredictionsTabFetchDataStartedPayload } from './ng-rx/payloads';
 import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from '@backend-service/model';
@@ -19,7 +19,7 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
   public date: string = dateFns.format(new Date(), environment.dateFormat);
   
   constructor(private store: Store<IAppState>) {
-    super();
+    super("divChartPredictions");
   }
 
   ngOnInit() {

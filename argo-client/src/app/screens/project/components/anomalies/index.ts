@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterContentInit } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Store, select } from '@ngrx/store';
 import { IAppState, IProjectScreenState } from '@app-state/.';
@@ -19,7 +19,7 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
   public dateTo: string = dateFns.format(new Date(), environment.dateFormat);
 
   constructor(private store: Store<IAppState>) {
-    super();
+    super("divChartAnomalies");
   }
 
   ngOnInit() {
@@ -35,18 +35,16 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
         this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == screenState.anomaliesTab.flowChannel);
         if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
           this.selectedCsvDataSource = _.first(this.flowChannels);
-        setTimeout(() => {
-          this.chartData = [{
-              color: "blue",
-              name: "Flow",
-              points: screenState.anomaliesTab.flow
-            }, {
-              color: "red",
-              name: "Anomalies",
-              points: screenState.anomaliesTab.anomalies
-            }];
-          this.refreshChart();
-        }, 100);
+        this.chartData = [{
+            color: "blue",
+            name: "Flow",
+            points: screenState.anomaliesTab.flow
+          }, {
+            color: "red",
+            name: "Anomalies",
+            points: screenState.anomaliesTab.anomalies
+          }];
+        this.refreshChart();
       });
   }
 
