@@ -5,6 +5,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~angular2-toaster/toaster.css";
+@import "~time-series-scroller/lib/out/sass/hp-slider.scss";
 
 body {
   padding: 10px;
@@ -15,4 +16,8 @@ body {
 
 :export {
   greeting: $greeting;
+}
+
+#divReact {
+  height: 1000
 }

@@ -1,57 +1,59 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { OnInit, HostListener } from '@angular/core';
 import { IProject, ICsvDataSource, IDateTimeValue } from "@backend-service/model";
 import { environment } from '@environments/environment';
+import { HpTimeSeriesScroller, IHpTimeSeriesScrollerProps, convertHpTimeSeriesChartScss, convertHpSliderScss, IHpSliderScss, IHpTimeSeriesChartScss, hpTimeSeriesChartReducers, IExternalSourceTimeSeries } from 'time-series-scroller';
+import * as hpSliderScss from 'time-series-scroller/lib/out/sass/hp-slider.scss';
+import * as timeSeriesChartScss from 'time-series-scroller/lib/out/sass/hp-time-series-chart.scss';
+
 
 export abstract class ComponentWithChart implements OnInit {
+  private divChart: string;
   public project: IProject = <IProject> { csvDataSources: [] };
   public flowChannels: ICsvDataSource[] = [];
   public selectedCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
-  public chartData = [];
-  public chartOptions = {
-    chart: {
-      type: "lineChart",
-      width: 800,
-      height: 350,
-      margin: {
-        top: 20,
-        right: 55,
-        bottom: 55,
-        left: 55
-      },
-      useInteractiveGuideline: false,
-      x: function(d: IDateTimeValue) { return d.unixTimestamp; },
-      y: function(d: IDateTimeValue) { return d.value; },
-      xAxis: {
-        axisLabel: "Time",
-        staggerLabels: true,
-        tickFormat: (tick) => { return dateFns.format(tick, environment.dateTimeFormat); }
-      },
-      yAxis: {
-        axisLabel: "Value",
-        axisLabelDistance: -10,
-        tickFormat: (tick) => { return Number(tick).toFixed(2) }
-      }
-    }
+  protected chartDimensions = { width: 0, height: 0 };
+  protected chartData: IExternalSourceTimeSeries[];
+
+  constructor(divChart) {
+    this.divChart = divChart;
   }
 
-  protected updateChartSize() {
-    this.chartOptions = _.extend({}, this.chartOptions, {
-      chart: _.extend({}, this.chartOptions.chart, {
-        width: window.innerWidth-50,
-        height: window.innerHeight-220
-      })
-    });
+  private renderChart() {
+    if (!_.isObject(document.getElementById(this.divChart)))
+      return;
+    ReactDOM.render(
+      React.createElement(HpTimeSeriesScroller, <IHpTimeSeriesScrollerProps> {
+        timeSeriesChartScss: _.extend(convertHpTimeSeriesChartScss(timeSeriesChartScss), <IHpTimeSeriesChartScss> {
+          widthPx: this.chartDimensions.width
+        }),
+        sliderScss: _.extend(convertHpSliderScss(hpSliderScss), <IHpSliderScss> {
+          widthPx: this.chartDimensions.width
+        }),
+        displayZoomLevelButtons: false,
+        state: hpTimeSeriesChartReducers.setData(null, {
+          type: null,
+          payload: this.chartData
+        })
+      }),
+      document.getElementById(this.divChart));
+  }
+
+  protected refreshChart() {
+    this.chartDimensions.width = window.innerWidth-50;
+    this.chartDimensions.height = window.innerHeight-220;
+    this.renderChart();
   }
 
   public ngOnInit() {
-    this.updateChartSize();
   }
   
   @HostListener('window:resize')
   public onResize() {
-    this.updateChartSize();
+    this.refreshChart();
   }
 
   public onFlowDropDownClick(channelName: string) {

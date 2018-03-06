@@ -1,12 +1,13 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, AfterContentInit } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Store, select } from '@ngrx/store';
 import { IAppState, IProjectScreenState } from '@app-state/.';
 import { ComponentWithChart } from '../component-with-chart';
 import { EnumCsvDataSourceType, IDateTimeValue } from '@backend-service/model';
 import * as actions from './ng-rx/actions';
+import { IUnixTimePoint } from 'time-series-scroller';
 
 @Component({
   selector: 'anomalies-tab',
@@ -16,13 +17,12 @@ import * as actions from './ng-rx/actions';
 export class AnomaliesComponent extends ComponentWithChart implements OnInit {
   public dateFrom: string = dateFns.format(new Date(), environment.dateFormat);
   public dateTo: string = dateFns.format(new Date(), environment.dateFormat);
-  
+
   constructor(private store: Store<IAppState>) {
-    super();
+    super("divChartAnomalies");
   }
 
   ngOnInit() {
-    super.updateChartSize();
     this.store
       .pipe(select((store) => store.projectScreenState ))
       .subscribe((screenState: IProjectScreenState) => {
@@ -36,17 +36,18 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
         if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
           this.selectedCsvDataSource = _.first(this.flowChannels);
         this.chartData = [{
-          values: screenState.anomaliesTab.flow,
-          key: 'Flow',
-          color: 'blue'
-        },{
-          values: screenState.anomaliesTab.anomalies,
-          key: 'Anomalies',
-          color: 'red'
-        }]
+            color: "blue",
+            name: "Flow",
+            points: screenState.anomaliesTab.flow
+          }, {
+            color: "red",
+            name: "Anomalies",
+            points: screenState.anomaliesTab.anomalies
+          }];
+        this.refreshChart();
       });
   }
-  
+
   onFlowDropDownClick(channelName: string) {
     super.onFlowDropDownClick(channelName);
     if (_.isObject(this.selectedCsvDataSource)) {
@@ -68,11 +69,11 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
         dateFrom: dateFns.format(new Date(this.dateFrom), environment.dateFormat),
         dateTo: dateFns.format(new Date(this.dateTo), environment.dateFormat),
         flowMap: el => <IDateTimeValue> {
-          unixTimestamp: new Date(el.time).getTime(),
+          unix: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         },
         anomaliesMap: el => <IDateTimeValue> {
-          unixTimestamp: new Date(el.time).getTime(),
+          unix: new Date(el.time).getTime(),
           value: parseFloat(el.value)
         }
       }));
