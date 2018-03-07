@@ -9,6 +9,7 @@ import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from 
 import { IAppState, IProjectScreenState } from '@app-state/.';
 import { environment } from '@environments/environment';
 import { ComponentWithChart } from '../component-with-chart';
+import { EnumTimeSeriesType } from 'time-series-scroller';
 
 @Component({
   selector: 'predictions-tab',
@@ -19,7 +20,7 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
   public date: string = dateFns.format(new Date(), environment.dateFormat);
   
   constructor(private store: Store<IAppState>) {
-    super("divChartPredictions");
+    super("divChartPredictions", false);
   }
 
   ngOnInit() {
@@ -37,11 +38,13 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
         this.chartData = [{
           points: screenState.predictionsTab.flow,
           name: 'Flow',
-          color: 'blue'
+          color: 'blue',
+          type: EnumTimeSeriesType.Line
         },{
           points: screenState.predictionsTab.predictions,
           name: 'Prediction',
-          color: 'orange'
+          color: 'orange',
+          type: EnumTimeSeriesType.Line
         }];
         this.refreshChart();
       });

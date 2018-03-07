@@ -73,11 +73,14 @@ export class HttpEndpointMockService implements IHttpEndpoint {
       let referenceValue = _.random(-50, 50);
       const endDate = new Date(dateFns.endOfDay(dateTo));
       while (dateFns.isBefore(referenceDate, endDate)) {
-        result.push(<IDateTimeValue> {
-          value: _.random(0, 10) <= 2 ? referenceValue + 20-_.random(10) : null,
-          unix: referenceDate.getTime()
-        });
-        referenceValue = referenceValue + 10-_.random(20);
+        let suggestedValue = _.random(0, 10) <= 2 ? referenceValue + 20-_.random(10) : null;
+        if (_.isNumber(suggestedValue)) {
+          result.push(<IDateTimeValue> {
+            value: suggestedValue,
+            unix: referenceDate.getTime()
+          });
+          referenceValue = referenceValue + 10-_.random(20);
+        }
         referenceDate = dateFns.addMinutes(referenceDate, 5);
       }
       return result;

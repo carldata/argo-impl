@@ -5,38 +5,38 @@ import * as ReactDOM from 'react-dom';
 import { OnInit, HostListener } from '@angular/core';
 import { IProject, ICsvDataSource, IDateTimeValue } from "@backend-service/model";
 import { environment } from '@environments/environment';
-import { HpTimeSeriesScroller, IHpTimeSeriesScrollerProps, convertHpTimeSeriesChartScss, convertHpSliderScss, IHpSliderScss, IHpTimeSeriesChartScss, hpTimeSeriesChartReducers, IExternalSourceTimeSeries } from 'time-series-scroller';
+import { HpTimeSeriesScroller, IHpTimeSeriesScrollerProps, convertHpTimeSeriesChartScss, convertHpSliderScss, IHpSliderScss, IHpTimeSeriesChartScss, hpTimeSeriesChartReducers, IExternalSourceTimeSeries, HpTimeSeriesScrollerWrapper, IHpTimeSeriesScrollerWrapperProps } from 'time-series-scroller';
 import * as hpSliderScss from 'time-series-scroller/lib/out/sass/hp-slider.scss';
 import * as timeSeriesChartScss from 'time-series-scroller/lib/out/sass/hp-time-series-chart.scss';
 
 
 export abstract class ComponentWithChart implements OnInit {
   private divChart: string;
+  private displaySlider: boolean;
   public project: IProject = <IProject> { csvDataSources: [] };
   public flowChannels: ICsvDataSource[] = [];
   public selectedCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
   protected chartDimensions = { width: 0, height: 0 };
   protected chartData: IExternalSourceTimeSeries[];
 
-  constructor(divChart) {
+  constructor(divChart, displaySlider) {
     this.divChart = divChart;
+    this.displaySlider = displaySlider;
   }
 
   private renderChart() {
     if (!_.isObject(document.getElementById(this.divChart)))
       return;
+    console.log(this.chartData);
     ReactDOM.render(
-      React.createElement(HpTimeSeriesScroller, <IHpTimeSeriesScrollerProps> {
+      React.createElement(HpTimeSeriesScrollerWrapper, <IHpTimeSeriesScrollerWrapperProps> {
+        series: this.chartData,
+        displaySlider: this.displaySlider,
         timeSeriesChartScss: _.extend(convertHpTimeSeriesChartScss(timeSeriesChartScss), <IHpTimeSeriesChartScss> {
           widthPx: this.chartDimensions.width
         }),
         sliderScss: _.extend(convertHpSliderScss(hpSliderScss), <IHpSliderScss> {
           widthPx: this.chartDimensions.width
-        }),
-        displayZoomLevelButtons: false,
-        state: hpTimeSeriesChartReducers.setData(null, {
-          type: null,
-          payload: this.chartData
         })
       }),
       document.getElementById(this.divChart));

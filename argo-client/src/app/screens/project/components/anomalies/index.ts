@@ -7,7 +7,7 @@ import { IAppState, IProjectScreenState } from '@app-state/.';
 import { ComponentWithChart } from '../component-with-chart';
 import { EnumCsvDataSourceType, IDateTimeValue } from '@backend-service/model';
 import * as actions from './ng-rx/actions';
-import { IUnixTimePoint } from 'time-series-scroller';
+import { IUnixTimePoint, EnumTimeSeriesType } from 'time-series-scroller';
 
 @Component({
   selector: 'anomalies-tab',
@@ -19,7 +19,7 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
   public dateTo: string = dateFns.format(new Date(), environment.dateFormat);
 
   constructor(private store: Store<IAppState>) {
-    super("divChartAnomalies");
+    super("divChartAnomalies", true);
   }
 
   ngOnInit() {
@@ -38,11 +38,13 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
         this.chartData = [{
             color: "blue",
             name: "Flow",
-            points: screenState.anomaliesTab.flow
+            points: screenState.anomaliesTab.flow,
+            type: EnumTimeSeriesType.Line
           }, {
             color: "red",
             name: "Anomalies",
-            points: screenState.anomaliesTab.anomalies
+            points: screenState.anomaliesTab.anomalies,
+            type: EnumTimeSeriesType.Dots
           }];
         this.refreshChart();
       });
