@@ -8,14 +8,14 @@ import { ParseResult } from 'papaparse';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { IHttpEndpoint, ICsvRowObject } from './contract';
 import { environment } from '@environments/environment';
-import { IGcObjects, IProject, ICsvDataSource, EnumCsvDataSourceType, IDateTimeValue } from '@backend-service/model';
+import { IGcObjects, IProject, ICsvDataSource, EnumCsvDataSourceType, IUnixValue } from '@backend-service/model';
 import { Store } from '@ngrx/store';
 import { IAppState } from '@app-state/.';
 
 @Injectable()
 export class HttpEndpointService implements IHttpEndpoint {
   private appName =  "argo-tests";
-  private cache: Map<string, IDateTimeValue[]> = new Map<string, IDateTimeValue[]>();
+  private cache: Map<string, IUnixValue[]> = new Map<string, IUnixValue[]>();
 
   constructor(private http: HttpClient) { }
 
@@ -93,7 +93,7 @@ export class HttpEndpointService implements IHttpEndpoint {
         ));
   }
 
-  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
     let fromTimestamp = dateFns.getTime(new Date(dateFns.startOfDay(dateFrom)));
     let toTimestamp = dateFns.getTime(dateFns.endOfDay(dateTo));
     let papaParseConfig = (resolve) => _.extend({}, {
@@ -111,12 +111,12 @@ export class HttpEndpointService implements IHttpEndpoint {
           resolve(this.cache.get(url)) :
           Papa.parse(url, papaParseConfig(resolve))
       ))
-      .map((series: IDateTimeValue[]) => 
+      .map((series: IUnixValue[]) => 
         _.filter(series, el => _.inRange(el.unix, fromTimestamp, toTimestamp))
       );
   }
 
-  public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+  public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
     let targetUrl = `${url}/${projectName}?flow=${channelName}&day=${date}`;
     let fromTimestamp = dateFns.getTime(new Date(date));
     let toTimestamp = dateFns.getTime(dateFns.addDays(new Date(date), 1));
@@ -131,7 +131,7 @@ export class HttpEndpointService implements IHttpEndpoint {
     return Observable.from(new Promise((resolve, reject) => Papa.parse(targetUrl, papaParseConfig(resolve))));
   }
 
-  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
     return Observable.of([]);
   }
 }

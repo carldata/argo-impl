@@ -40,5 +40,33 @@
       "url": "",
       "type": 1
     }]
+  },
+  {
+    "id": "ab594xs5",
+    "name": "Mocked #3",
+    "url": "",
+    "startDate": "2015-05-12 10:30:00",
+    "endDate": "2015-11-15 11:45:00",
+    "splitDate": "2015-07-28 9:35:00",
+    "csvDataSources": [{
+      "name": "city_flow",
+      "url": "",
+      "type": 1
+    },
+    {
+      "name": "city_flow_edited",
+      "url": "",
+      "type": 1
+    },
+    {
+      "name": "valley_flow",
+      "url": "",
+      "type": 1
+    },
+    {
+      "name": "valley_flow_edited",
+      "url": "",
+      "type": 1
+    }]
   }
 ]

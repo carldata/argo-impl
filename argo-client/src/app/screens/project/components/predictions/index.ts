@@ -5,7 +5,7 @@ import { Store, select } from '@ngrx/store';
 import { Component, OnInit, Input, Inject, HostListener, AfterViewInit, AfterViewChecked, SimpleChanges, OnChanges, AfterContentChecked, AfterContentInit } from '@angular/core';
 import * as actions from './ng-rx/actions';
 import { IPredictionsTabFetchDataStartedPayload } from './ng-rx/payloads';
-import { IProject, ICsvDataSource, IDateTimeValue, EnumCsvDataSourceType } from '@backend-service/model';
+import { IProject, ICsvDataSource, IUnixValue, EnumCsvDataSourceType } from '@backend-service/model';
 import { IAppState, IProjectScreenState } from '@app-state/.';
 import { environment } from '@environments/environment';
 import { ComponentWithChart } from '../component-with-chart';
@@ -32,9 +32,9 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
         this.project = screenState.project;
         this.flowChannels = _.filter(this.project.csvDataSources, el => el.type == EnumCsvDataSourceType.Flow);
         this.date = screenState.predictionsTab.date;
-        this.selectedCsvDataSource = _.find(this.flowChannels, s => s.name == screenState.predictionsTab.flowChannel);
-        if ((!_.isObject(this.selectedCsvDataSource)) && (this.flowChannels.length > 0))
-          this.selectedCsvDataSource = _.first(this.flowChannels);
+        this.selectedBaseFlowCsvDataSource = _.find(this.flowChannels, s => s.name == screenState.predictionsTab.flowChannel);
+        if ((!_.isObject(this.selectedBaseFlowCsvDataSource)) && (this.flowChannels.length > 0))
+          this.selectedBaseFlowCsvDataSource = _.first(this.flowChannels);
         this.chartData = [{
           points: screenState.predictionsTab.flow,
           name: 'Flow',
@@ -56,24 +56,24 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
 
   onFlowDropDownClick(channelName: string) {
     super.onFlowDropDownClick(channelName);
-    if (_.isObject(this.selectedCsvDataSource)) {
+    if (_.isObject(this.selectedBaseFlowCsvDataSource)) {
       this.store.dispatch(new actions.PredictionsFlowChannelChangedAction(channelName));
     }
   }
 
   onLoadTimeSeries() {
-    if (_.isString(this.selectedCsvDataSource.url)) {
+    if (_.isString(this.selectedBaseFlowCsvDataSource.url)) {
       this.store.dispatch(new actions.PredictionsFetchDataStartedAction({ 
         projectName: this.project.name,
-        timeSeriesUrl: this.selectedCsvDataSource.url,
+        timeSeriesUrl: this.selectedBaseFlowCsvDataSource.url,
         predictionsUrl: environment.predictionsBackendUrl,
-        channelName: this.selectedCsvDataSource.name,
+        channelName: this.selectedBaseFlowCsvDataSource.name,
         date: dateFns.format(new Date(this.date), environment.dateFormat),
-        flowMap: el => <IDateTimeValue> {
+        flowMap: el => <IUnixValue> {
           unix: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
         },
-        predictionsMap: el => <IDateTimeValue> {
+        predictionsMap: el => <IUnixValue> {
           unix: new Date(el.time).getTime(),
           value: parseFloat(el.value)
         }

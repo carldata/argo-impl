@@ -9,7 +9,7 @@ import { ParseResult } from 'papaparse';
 import { LoaderScreenService } from '../../loader-screen/loader-screen.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { IDateTimeValue, IProject } from '@backend-service/model';
+import { IUnixValue, IProject } from '@backend-service/model';
 
 @Injectable()
 export class BackendService {
@@ -53,15 +53,15 @@ export class BackendService {
     return this.wrapObservable(this.httpEndpoint.getProjects());
   }
 
-  public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+  public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
     return this.wrapObservable(this.httpEndpoint.getPrediction(url, projectName, channelName, date, map));
   }
 
-  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
+  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
     return this.wrapObservable(this.httpEndpoint.getAnomalies(url, projectName, channelName, dateFrom, dateTo, map));
   }
 
-  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IDateTimeValue): Observable<IDateTimeValue[]> {
-    return this.wrapObservable<IDateTimeValue[]>(this.httpEndpoint.getTimeSeries(url, dateFrom, dateTo, map));
+  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
+    return this.wrapObservable<IUnixValue[]>(this.httpEndpoint.getTimeSeries(url, dateFrom, dateTo, map));
   }
 }

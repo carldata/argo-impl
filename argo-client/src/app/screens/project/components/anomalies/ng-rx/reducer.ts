@@ -7,15 +7,12 @@ import { IAnomaliesTabState } from './state';
 import { environment } from '@environments/environment';
 
 const anomaliesTabInitialState: IAnomaliesTabState = {  
-  dateFrom: dateFns.format(dateFns.addDays(new Date(), -7), environment.dateFormat),
-  dateTo: dateFns.format(new Date(), environment.dateFormat),
   anomalies: [],
-  flow: [],
+  normalizedAnomalies: [],
+  baseFlow: [],
+  editedFlow: [],
   flowChannel: null
 }
-
-const dateFromToChangedReducer = (state: IAnomaliesTabState, action: actions.AnomaliesDateFromToChangedAction) =>
-  _.extend({}, state, <IAnomaliesTabState> { dateFrom: action.dateFrom, dateTo: action.dateTo });
 
 const flowChannelChangedReducer = (state: IAnomaliesTabState, action: actions.AnomaliesFlowChannelChangedAction) =>
   _.extend({}, state, <IAnomaliesTabState> { flowChannel: action.channel });
@@ -23,17 +20,16 @@ const flowChannelChangedReducer = (state: IAnomaliesTabState, action: actions.An
 const dataFetchedReducer = (state: IAnomaliesTabState, action: actions.AnomaliesFetchDataSucceededAction) =>
   _.extend({}, state, <IAnomaliesTabState> {
     anomalies: action.data.anomalies,
-    flow: action.data.measuredFlow
+    normalizedAnomalies: action.data.normalizedAnomalies,
+    baseFlow: action.data.baseFlow,
+    editedFlow: action.data.editedFlow
   })
 
-type AnomaliesTabActionTypes = actions.AnomaliesDateFromToChangedAction|
-                               actions.AnomaliesFlowChannelChangedAction|
+type AnomaliesTabActionTypes = actions.AnomaliesFlowChannelChangedAction|
                                actions.AnomaliesFetchDataSucceededAction;
 
 function anomaliesTabReducer(state: IAnomaliesTabState = anomaliesTabInitialState, action: AnomaliesTabActionTypes): IAnomaliesTabState {
   switch (action.type) {
-    case actionsTypes.ANOMALIES_TAB_DATE_FROM_TO_CHANGED:
-      return dateFromToChangedReducer(state, action);
     case actionsTypes.ANOMALIES_TAB_FLOW_CHANNEL_CHANGED:
       return flowChannelChangedReducer(state, action);
     case actionsTypes.ANOMALIES_TAB_FETCH_DATA_SUCCEEDED:
