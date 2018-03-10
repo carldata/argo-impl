@@ -20,7 +20,7 @@ const flowChannelChangedReducer = (state: IAnomaliesTabState, action: actions.An
 const dataFetchedReducer = (state: IAnomaliesTabState, action: actions.AnomaliesFetchDataSucceededAction) =>
   _.extend({}, state, <IAnomaliesTabState> {
     anomalies: action.data.anomalies,
-    normalizedAnomalies: action.data.normalizedAnomalies,
+    normalizedAnomalies: action.data.groupedNormalizedAnomalies,
     baseFlow: action.data.baseFlow,
     editedFlow: action.data.editedFlow
   })

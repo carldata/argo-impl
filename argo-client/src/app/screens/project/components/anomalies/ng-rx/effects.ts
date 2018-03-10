@@ -10,7 +10,7 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import * as actionTypes from './action-types';
 import * as actions from './actions';
 import { BackendService } from '@backend-service/.';
-import { IUnixValue } from '@backend-service/model';
+import { IUnixValue, ITimeSeries } from '@backend-service/model';
 import { environment } from '@environments/environment';
 import { GeneralErrorAction } from '@common/ng-rx/actions';
 
@@ -21,31 +21,33 @@ export class ProjectScreenAnomaliesTabEffects {
     private actions$: Actions
   ) { }
 
-
   /**
-   * Anomalies generally are not continous time-series, since it must be presented as "series of series"
-   * applying "fragment" indexing built-in in time series chart
+   * Anomaly samples get indexed by given base time-series unix values 
    */
-  private normalizeAnomalies = (baseTimeSeries: IUnixValue[], anomalies: IUnixValue[]): IUnixValue[][] => {
-    let result = [];
-    let anomaliesNormalized: IUnixValue[] = _.map(baseTimeSeries, el => <IUnixValue>{ 
+  private normalizeAnomalies = (baseTimeSeries: ITimeSeries, anomalies: ITimeSeries): ITimeSeries => 
+    _.map(baseTimeSeries, el => <IUnixValue>{ 
       unix: el.unix, 
       value: (_.find(anomalies, a => a.unix == el.unix) || { value: null }).value
     });
-    let tempArray = [];
-    for (let i=0; i < anomaliesNormalized.length; i++) {
-      if (_.isNumber(anomaliesNormalized[i].value))
-        tempArray.push(anomaliesNormalized[i])
-      if (_.isNull(anomaliesNormalized[i].value) && (!_.isEmpty(tempArray))) {
-        result.push(tempArray);
-        tempArray = [];
-      }
-    }
-    if (!_.isEmpty(tempArray))
-      result.push(tempArray);
-    return result;
-  }
 
+  /**
+   * Splits continous anomalies series into groups of time series.
+   * Split criteria is based on null values detection.
+   */
+  private groupNormalizedAnomalies = (anomalies: ITimeSeries): ITimeSeries[] => 
+    _.reduce(anomalies, (acc: { arrays: ITimeSeries[], lastValue: number }, sample: IUnixValue) => {
+      if (!_.isNull(sample.value)) {
+        if (_.isNull(acc.lastValue))
+          return { arrays: _.concat(acc.arrays, [[sample]]), lastValue: sample.value };
+        if (!_.isNull(acc.lastValue))
+          return { 
+            arrays: _.concat(_.slice(acc.arrays, 0, acc.arrays.length-1), 
+                             [_.concat(_.last(acc.arrays), sample)]), 
+            lastValue: sample.value 
+          };
+      }
+      return { arrays: acc.arrays, lastValue: sample.value };
+    }, { arrays: [], lastValue: null }).arrays;
 
    @Effect() getTimeSeries$: Observable<actions.AnomaliesFetchDataSucceededAction|GeneralErrorAction> = this.actions$
     .pipe(
@@ -75,10 +77,9 @@ export class ProjectScreenAnomaliesTabEffects {
               baseFlow: baseFlow,
               editedFlow: editedFlow,
               anomalies: anomalies,
-              normalizedAnomalies: this.normalizeAnomalies(baseFlow, anomalies)
+              groupedNormalizedAnomalies: this.groupNormalizedAnomalies(this.normalizeAnomalies(baseFlow, anomalies))
             })
-          }
-          ),
+          }),
           catchError(e => of(new GeneralErrorAction(e)))
         )
       })

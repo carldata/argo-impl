@@ -18,5 +18,5 @@ export interface IAnomaliesTabFetchDataSucceededPayload {
   baseFlow: ITimeSeries;
   editedFlow: ITimeSeries;
   anomalies: ITimeSeries;
-  normalizedAnomalies: ITimeSeries[];
+  groupedNormalizedAnomalies: ITimeSeries[];
 }
