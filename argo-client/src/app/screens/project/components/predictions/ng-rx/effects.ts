@@ -27,9 +27,9 @@ export class ProjectScreenPredictionsTabEffects {
       mergeMap((action: actions.PredictionsFetchDataStartedAction) => { 
         const timeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.timeSeriesUrl,
+          action.parameters.flowMap,
           dateFns.format(dateFns.addDays(action.parameters.date, -2), environment.dateFormat),
-          action.parameters.date, 
-          action.parameters.flowMap);
+          action.parameters.date);
         const predictionsObservable = this.backendService.getPrediction(
           action.parameters.predictionsUrl,
           action.parameters.projectName, 

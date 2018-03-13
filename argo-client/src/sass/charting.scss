@@ -1,0 +1,35 @@
+$baseFlowSeriesColor: blue;
+$predictedFlowSeriesColor: orange;
+$editedFlowSeriesColor: orange;
+$anomalySeriesColor: red;
+
+.card-header, .card-body {
+  padding-left: 3px;  
+  padding-right: 3px;  
+  padding-top: 1px;  
+  padding-bottom: 1px;
+  font-size: 0.9rem;
+}
+
+.baseFlow {
+  color: $baseFlowSeriesColor;
+}
+
+.editedFlow {
+  color: $editedFlowSeriesColor;
+}
+
+.predictedFlow {
+  color: $editedFlowSeriesColor;
+}
+
+.anomaliesFlow {
+  color: $anomalySeriesColor;
+}
+
+:export {
+  baseFlowSeriesColor: $baseFlowSeriesColor;
+  editedFlowSeriesColor: $editedFlowSeriesColor;
+  predictedFlowSeriesColor: $predictedFlowSeriesColor;
+  anomalySeriesColor: $anomalySeriesColor;
+}

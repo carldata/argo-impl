@@ -20,6 +20,7 @@
       "prefix": "app",
       "styles": [
         "sass/styles.scss",
+        "sass/charting.scss",
         "../node_modules/time-series-scroller/lib/out/sass/hp-slider.scss",
         "../node_modules/time-series-scroller/lib/out/sass/hp-time-series-chart.scss"
       ],

@@ -57,11 +57,11 @@ export class BackendService {
     return this.wrapObservable(this.httpEndpoint.getPrediction(url, projectName, channelName, date, map));
   }
 
-  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
-    return this.wrapObservable(this.httpEndpoint.getAnomalies(url, projectName, channelName, dateFrom, dateTo, map));
+  public getAnomalies(url: string, projectName: string, channelName: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
+    return this.wrapObservable(this.httpEndpoint.getAnomalies(url, projectName, channelName, map));
   }
 
-  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
-    return this.wrapObservable<IUnixValue[]>(this.httpEndpoint.getTimeSeries(url, dateFrom, dateTo, map));
+  public getTimeSeries(url: string, map: (el: ICsvRowObject) => IUnixValue, dateFrom?: string, dateTo?: string): Observable<IUnixValue[]> {
+    return this.wrapObservable<IUnixValue[]>(this.httpEndpoint.getTimeSeries(url, map, dateFrom, dateTo));
   }
 }

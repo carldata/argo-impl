@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
+import * as chartStyles from '../../../../../sass/charting.scss';
 import { Observable } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { Component, OnInit, Input, Inject, HostListener, AfterViewInit, AfterViewChecked, SimpleChanges, OnChanges, AfterContentChecked, AfterContentInit } from '@angular/core';
@@ -37,13 +38,13 @@ export class PredictionsComponent extends ComponentWithChart implements OnInit {
           this.selectedBaseFlowCsvDataSource = _.first(this.flowChannels);
         this.chartData = [{
           points: screenState.predictionsTab.flow,
-          name: 'Flow',
-          color: 'blue',
+          name: 'Base Flow',
+          color: chartStyles.baseFlowSeriesColor,
           type: EnumTimeSeriesType.Line
         },{
           points: screenState.predictionsTab.predictions,
           name: 'Prediction',
-          color: 'orange',
+          color: chartStyles.predictedFlowSeriesColor,
           type: EnumTimeSeriesType.Line
         }];
         this.refreshChart();

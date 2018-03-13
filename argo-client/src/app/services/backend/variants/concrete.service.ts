@@ -83,6 +83,12 @@ export class HttpEndpointService implements IHttpEndpoint {
         });
       });
 
+  private filterResults = (series: IUnixValue[], dateFrom?: string|number, dateTo?: string|number) => {
+    let fromTimestamp = _.isNumber(dateFrom) ? dateFrom : (_.isString(dateFrom) ? dateFns.getTime(new Date(dateFns.startOfDay(dateFrom))) : Number.MIN_SAFE_INTEGER);
+    let toTimestamp = _.isNumber(dateTo) ? dateTo : (_.isString(dateTo) ? dateFns.getTime(dateFns.endOfDay(dateTo)) : Number.MAX_SAFE_INTEGER);
+    return _.filter(series, el => _.inRange(el.unix, fromTimestamp, toTimestamp));
+  }
+
   public getProjects(): Observable<IProject[]> {
     return this.http
       .get<IGcObjects>(`${environment.googleCloudApiProjectInfoUrl}`)
@@ -93,9 +99,7 @@ export class HttpEndpointService implements IHttpEndpoint {
         ));
   }
 
-  public getTimeSeries(url: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
-    let fromTimestamp = dateFns.getTime(new Date(dateFns.startOfDay(dateFrom)));
-    let toTimestamp = dateFns.getTime(dateFns.endOfDay(dateTo));
+  public getTimeSeries(url: string, map: (el: ICsvRowObject) => IUnixValue, dateFrom?: string, dateTo?: string): Observable<IUnixValue[]> {
     let papaParseConfig = (resolve) => _.extend({}, {
       header: true,
       skipEmptyLines: true,
@@ -108,12 +112,10 @@ export class HttpEndpointService implements IHttpEndpoint {
     });
     return Observable.from(new Promise((resolve, reject) =>
         this.cache.has(url) ? 
-          resolve(this.cache.get(url)) :
+          resolve(this.filterResults(this.cache.get(url), dateFrom, dateTo)) :
           Papa.parse(url, papaParseConfig(resolve))
       ))
-      .map((series: IUnixValue[]) => 
-        _.filter(series, el => _.inRange(el.unix, fromTimestamp, toTimestamp))
-      );
+      .map((series: IUnixValue[]) => this.filterResults(series, dateFrom, dateTo));
   }
 
   public getPrediction(url: string, projectName: string, channelName: string, date: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
@@ -124,14 +126,35 @@ export class HttpEndpointService implements IHttpEndpoint {
       header: true,
       skipEmptyLines: true,
       download: true,
-      complete: (results: ParseResult) => 
-        resolve(_.map(results.data, map)
-        .filter((value) => _.inRange(value.unix, fromTimestamp, toTimestamp)))
+      complete: (results: ParseResult) =>  {
+        let cacheEntry = this.filterResults(_.map(results.data, map), fromTimestamp, toTimestamp);
+        this.cache.set(targetUrl, cacheEntry);
+        resolve(cacheEntry);
+      }
     });
-    return Observable.from(new Promise((resolve, reject) => Papa.parse(targetUrl, papaParseConfig(resolve))));
+    return Observable.from(new Promise((resolve, reject) =>
+      this.cache.has(targetUrl) ? 
+        resolve(this.cache.get(targetUrl)) : 
+        Papa.parse(targetUrl, papaParseConfig(resolve))
+    ));
   }
 
-  public getAnomalies(url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
-    return Observable.of([]);
+  public getAnomalies(url: string, projectName: string, series: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> {
+    const targetUrl = `${url}/${projectName}?series=${series}`;
+    const papaParseConfig = (resolve) => _.extend({}, {
+      header: true,
+      skipEmptyLines: true,
+      download: true,
+      complete: (results: ParseResult) => {
+        let cacheEntry = _.map(results.data, map);
+        this.cache.set(targetUrl, cacheEntry);
+        resolve(cacheEntry);
+      }
+    });
+    return Observable.from(new Promise((resolve, reject) =>
+      this.cache.has(targetUrl) ? 
+        resolve(this.cache.get(targetUrl)) : 
+        Papa.parse(targetUrl, papaParseConfig(resolve))
+    ));
   }
 }

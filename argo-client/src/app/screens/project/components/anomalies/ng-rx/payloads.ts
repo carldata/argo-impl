@@ -6,9 +6,8 @@ export interface IAnomaliesTabFetchDataStartedPayload {
   baseFlowTimeSeriesUrl: string;
   editedFlowTimeSeriesUrl: string;
   anomaliesUrl: string;
-  dateFrom: string;
-  dateTo: string;
   flowMap: (el: ICsvRowObject) => IUnixValue;
+  flowEditedMap: (el: ICsvRowObject) => IUnixValue;
   anomaliesMap: (el: ICsvRowObject) => IUnixValue;
   projectName: string;
   channelName: string;

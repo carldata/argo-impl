@@ -22,20 +22,32 @@ export class ProjectScreenAnomaliesTabEffects {
   ) { }
 
   /**
-   * Anomaly samples get indexed by given base time-series unix values 
+   * Anomaly samples get filtered-out and indexed by given base time-series unix values
    */
-  private normalizeAnomalies = (baseTimeSeries: ITimeSeries, anomalies: ITimeSeries): ITimeSeries => 
-    _.map(baseTimeSeries, el => <IUnixValue>{ 
-      unix: el.unix, 
-      value: (_.find(anomalies, a => a.unix == el.unix) || { value: null }).value
+  private normalizeAnomalies = (baseTimeSeries: ITimeSeries, anomalies: ITimeSeries): ITimeSeries => {
+    let mappedAnomalies = _.reduce<IUnixValue, Map<number, number>>(anomalies, (acc, el) => {
+      acc.set(el.unix, el.value);
+      return acc;
+    }, new Map<number, number>());
+    return _.map(baseTimeSeries, el => {
+      if ((test => _.isNumber(test) && (el.value != test))(mappedAnomalies.get(el.unix)))
+        return <IUnixValue>{
+          unix: el.unix,
+          value: el.value
+        }
+      return <IUnixValue>{
+        unix: el.unix,
+        value: null
+      }
     });
+  }
 
   /**
    * Splits continous anomalies series into groups of time series.
    * Split criteria is based on null values detection.
    */
-  private groupNormalizedAnomalies = (anomalies: ITimeSeries): ITimeSeries[] => 
-    _.reduce(anomalies, (acc: { arrays: ITimeSeries[], lastValue: number }, sample: IUnixValue) => {
+  private groupNormalizedAnomalies = (anomalies: ITimeSeries): ITimeSeries[] => {
+    return _.reduce(anomalies, (acc: { arrays: ITimeSeries[], lastValue: number }, sample: IUnixValue) => {
       if (!_.isNull(sample.value)) {
         if (_.isNull(acc.lastValue))
           return { arrays: _.concat(acc.arrays, [[sample]]), lastValue: sample.value };
@@ -48,6 +60,7 @@ export class ProjectScreenAnomaliesTabEffects {
       }
       return { arrays: acc.arrays, lastValue: sample.value };
     }, { arrays: [], lastValue: null }).arrays;
+  }
 
    @Effect() getTimeSeries$: Observable<actions.AnomaliesFetchDataSucceededAction|GeneralErrorAction> = this.actions$
     .pipe(
@@ -55,20 +68,14 @@ export class ProjectScreenAnomaliesTabEffects {
       mergeMap((action: actions.AnomaliesFetchDataStartedAction) => { 
         const baseFlowTimeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.baseFlowTimeSeriesUrl,
-          action.parameters.dateFrom, 
-          action.parameters.dateTo, 
           action.parameters.flowMap);
         const editedFlowTimeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.editedFlowTimeSeriesUrl,
-          action.parameters.dateFrom, 
-          action.parameters.dateTo, 
-          action.parameters.flowMap);
+          action.parameters.flowEditedMap);
         const anomaliesObservable = this.backendService.getAnomalies(
           action.parameters.anomaliesUrl,
           action.parameters.projectName, 
           action.parameters.channelName,
-          action.parameters.dateFrom, 
-          action.parameters.dateTo, 
           action.parameters.anomaliesMap);
         return Observable.forkJoin(baseFlowTimeSeriesObservable, editedFlowTimeSeriesObservable, anomaliesObservable).pipe(
           map((results: IUnixValue[][]) => { 

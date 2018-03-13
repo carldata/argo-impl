@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import * as dateFns from 'date-fns';
+import * as chartStyles from '../../../../../sass/charting.scss';
 import { Component, OnInit, AfterViewInit, AfterContentInit } from '@angular/core';
 import { environment } from '@environments/environment';
 import { Store, select } from '@ngrx/store';
@@ -16,9 +17,6 @@ import { IUnixTimePoint, EnumTimeSeriesType, IExternalSourceTimeSeries } from 't
 })
 export class AnomaliesComponent extends ComponentWithChart implements OnInit {
   public selectedEditedFlowCsvDataSource: ICsvDataSource = <ICsvDataSource> { name: "No flow channels available !" }
-  public dateFrom: string = dateFns.format(new Date(), environment.dateFormat);
-  public dateTo: string = dateFns.format(new Date(), environment.dateFormat);
-
 
   constructor(private store: Store<IAppState>) {
     super("divChartAnomalies", true);
@@ -39,18 +37,18 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
           if (_.isUndefined(this.selectedEditedFlowCsvDataSource))
           this.selectedEditedFlowCsvDataSource = <ICsvDataSource> { name: "No flow channels available !" };
         this.chartData = [{
-            color: "blue",
+            color: chartStyles.baseFlowSeriesColor,
             name: "Flow",
             points: screenState.anomaliesTab.baseFlow,
             type: EnumTimeSeriesType.Line
           },
           {
-            color: "orange",
+            color: chartStyles.editedFlowSeriesColor,
             name: "Edited Flow",
             points: screenState.anomaliesTab.editedFlow,
             type: EnumTimeSeriesType.Line
           }, ... _.map(screenState.anomaliesTab.normalizedAnomalies, el => <IExternalSourceTimeSeries>{
-            color: "red",
+            color: chartStyles.anomalySeriesColor,
             name: "Anomalies",
             points: el,
             type: EnumTimeSeriesType.DottedLine
@@ -74,11 +72,13 @@ export class AnomaliesComponent extends ComponentWithChart implements OnInit {
         editedFlowTimeSeriesUrl: this.selectedEditedFlowCsvDataSource.url,
         anomaliesUrl: environment.anomaliesBackendUrl,
         channelName: this.selectedBaseFlowCsvDataSource.name,
-        dateFrom: dateFns.format(new Date(this.dateFrom), environment.dateFormat),
-        dateTo: dateFns.format(new Date(this.dateTo), environment.dateFormat),
         flowMap: el => <IUnixValue> {
           unix: new Date(el.time).getTime(),
           value: parseFloat(el.flow)
+        },
+        flowEditedMap: el => <IUnixValue> {
+          unix: new Date(el.time).getTime(),
+          value: parseFloat(el.flow_edited)
         },
         anomaliesMap: el => <IUnixValue> {
           unix: new Date(el.time).getTime(),

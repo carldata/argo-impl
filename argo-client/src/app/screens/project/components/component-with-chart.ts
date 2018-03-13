@@ -27,7 +27,6 @@ export abstract class ComponentWithChart implements OnInit {
   private renderChart() {
     if (!_.isObject(document.getElementById(this.divChart)))
       return;
-    console.log(this.chartData);
     ReactDOM.render(
       React.createElement(HpTimeSeriesScrollerWrapper, <IHpTimeSeriesScrollerWrapperProps> {
         series: this.chartData,

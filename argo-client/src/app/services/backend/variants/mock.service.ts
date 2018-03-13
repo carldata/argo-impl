@@ -26,7 +26,7 @@ export class HttpEndpointMockService implements IHttpEndpoint {
           })]
         )));
 
-  public getTimeSeries = (url: string, dateFrom: string, dateTo: string, mapRawElement: (el: any) => IUnixValue): Observable<IUnixValue[]> =>
+  public getTimeSeries = (url: string, mapRawElement: (el: any) => IUnixValue, dateFrom?: string, dateTo?: string): Observable<IUnixValue[]> =>
     this.http
       .get<Object[]>("assets/json/mock-empty-array.json")
       .map<Object[], IUnixValue[]>(() => {
@@ -64,14 +64,14 @@ export class HttpEndpointMockService implements IHttpEndpoint {
         return result;
       });
 
-  public getAnomalies = (url: string, projectName: string, channelName: string, dateFrom: string, dateTo: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> =>
+  public getAnomalies = (url: string, projectName: string, channelName: string, map: (el: ICsvRowObject) => IUnixValue): Observable<IUnixValue[]> =>
     this.http
     .get<Object[]>("assets/json/mock-empty-array.json")
     .map<Object[], IUnixValue[]>(() => {
       let result = [];
-      let referenceDate = new Date(dateFns.startOfDay(dateFrom));
+      let referenceDate = new Date(dateFns.startOfDay(new Date()));
       let referenceValue = _.random(-50, 50);
-      const endDate = new Date(dateFns.endOfDay(dateTo));
+      const endDate = new Date(dateFns.endOfDay(dateFns.addDays(new Date(), -7)));
       let sampleCounter = (3 < _.random(0, 10)) ? _.random(5, 10) : 0;
       while (dateFns.isBefore(referenceDate, endDate)) {
         let suggestedValue = referenceValue + 20-_.random(10);
