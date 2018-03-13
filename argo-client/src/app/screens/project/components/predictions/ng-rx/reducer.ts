@@ -27,9 +27,9 @@ const dataFetchedReducer = (state: IPredictionsTabState, action: actions.Predict
   })
 
 type PredictionsTabActionTypes = actions.PredictionsFetchDataStartedAction|
-                                        actions.PredictionsFetchDataSucceededAction|
-                                        actions.PredictionsDateChangedAction|
-                                        actions.PredictionsFlowChannelChangedAction;
+                                 actions.PredictionsFetchDataSucceededAction|
+                                 actions.PredictionsDateChangedAction|
+                                 actions.PredictionsFlowChannelChangedAction;
 
 function predictionsTabReducer(state: IPredictionsTabState = predictionsTabInitialState, action: PredictionsTabActionTypes): IPredictionsTabState {
   switch (action.type) {

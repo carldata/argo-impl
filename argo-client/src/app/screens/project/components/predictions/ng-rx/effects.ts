@@ -10,7 +10,7 @@ import { of } from 'rxjs/observable/of';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { IPredictionsTabFetchDataSucceededPayload, IPredictionsTabFetchDataStartedPayload } from './payloads';
 import { BackendService } from '@backend-service/.';
-import { IDateTimeValue } from '@backend-service/model';
+import { IUnixValue } from '@backend-service/model';
 import { environment } from '@environments/environment';
 import { GeneralErrorAction } from '@common/ng-rx/actions';
 
@@ -27,9 +27,9 @@ export class ProjectScreenPredictionsTabEffects {
       mergeMap((action: actions.PredictionsFetchDataStartedAction) => { 
         const timeSeriesObservable = this.backendService.getTimeSeries(
           action.parameters.timeSeriesUrl,
+          action.parameters.flowMap,
           dateFns.format(dateFns.addDays(action.parameters.date, -2), environment.dateFormat),
-          action.parameters.date, 
-          action.parameters.flowMap);
+          action.parameters.date);
         const predictionsObservable = this.backendService.getPrediction(
           action.parameters.predictionsUrl,
           action.parameters.projectName, 
@@ -37,7 +37,7 @@ export class ProjectScreenPredictionsTabEffects {
           action.parameters.date,
           action.parameters.predictionsMap);
         return Observable.forkJoin(timeSeriesObservable, predictionsObservable).pipe(
-          map((results: IDateTimeValue[][]) => 
+          map((results: IUnixValue[][]) => 
             new actions.PredictionsFetchDataSucceededAction({
               measuredFlow: results[0],
               predictionFlow: results[1]

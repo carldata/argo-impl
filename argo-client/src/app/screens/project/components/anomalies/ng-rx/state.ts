@@ -1,9 +1,10 @@
-import { IDateTimeValue, IProject } from "@backend-service/model";
+import { IUnixValue, IProject } from "@backend-service/model";
+import { ITimeSeries } from "@backend-service/model/date-time-value";
 
 export interface IAnomaliesTabState {
   flowChannel: string;
-  dateFrom: string;
-  dateTo: string;
-  flow: IDateTimeValue[];
-  anomalies: IDateTimeValue[];
+  baseFlow: ITimeSeries;
+  editedFlow: ITimeSeries;
+  anomalies: ITimeSeries;
+  normalizedAnomalies: ITimeSeries[];
 }

@@ -1,19 +1,21 @@
 import { Action } from "@ngrx/store";
 import { ICsvRowObject } from "@backend-service/variants/contract";
-import { IDateTimeValue } from "@backend-service/model";
+import { IUnixValue, ITimeSeries } from "@backend-service/model";
 
 export interface IAnomaliesTabFetchDataStartedPayload {
-  timeSeriesUrl: string;
+  baseFlowTimeSeriesUrl: string;
+  editedFlowTimeSeriesUrl: string;
   anomaliesUrl: string;
-  dateFrom: string;
-  dateTo: string;
-  flowMap: (el: ICsvRowObject) => IDateTimeValue;
-  anomaliesMap: (el: ICsvRowObject) => IDateTimeValue;
+  flowMap: (el: ICsvRowObject) => IUnixValue;
+  flowEditedMap: (el: ICsvRowObject) => IUnixValue;
+  anomaliesMap: (el: ICsvRowObject) => IUnixValue;
   projectName: string;
   channelName: string;
 }
 
 export interface IAnomaliesTabFetchDataSucceededPayload {
-  measuredFlow: IDateTimeValue[];
-  anomalies: IDateTimeValue[];
+  baseFlow: ITimeSeries;
+  editedFlow: ITimeSeries;
+  anomalies: ITimeSeries;
+  groupedNormalizedAnomalies: ITimeSeries[];
 }

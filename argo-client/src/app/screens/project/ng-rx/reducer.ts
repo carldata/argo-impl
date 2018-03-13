@@ -43,7 +43,6 @@ export function projectScreenReducer(state: IProjectScreenState = initialState, 
       return _.extend({}, state, <IProjectScreenState> {
         predictionsTab: predictionsTabReducer(state.predictionsTab, action)
       })
-    case anomaliesTabActionTypes.ANOMALIES_TAB_DATE_FROM_TO_CHANGED:
     case anomaliesTabActionTypes.ANOMALIES_TAB_FLOW_CHANNEL_CHANGED:
     case predictionsTabActionTypes.ANOMALIES_TAB_FETCH_DATA_SUCCEEDED:
       return _.extend({}, state, <IProjectScreenState> {

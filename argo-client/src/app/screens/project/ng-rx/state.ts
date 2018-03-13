@@ -1,4 +1,4 @@
-import { IDateTimeValue, IProject } from "@backend-service/model";
+import { IUnixValue, IProject } from "@backend-service/model";
 import { IPredictionsTabState } from "../components/predictions/ng-rx/state";
 import { IAnomaliesTabState } from "../components/anomalies/ng-rx/state";
 
